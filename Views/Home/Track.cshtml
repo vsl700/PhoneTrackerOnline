@@ -2,18 +2,43 @@
     Layout = null;
 }
 
-<style>
-    body{
-        margin-bottom: 0px !important;
-    }
+<head>
+    <title>Track with Phone Tracker-Online</title>
+    <style>
+        body {
+            margin-bottom: 0px !important;
+        }
 
-    .phoneList{
-        width: 400px;
-        height: 100%;
-        overflow-y: scroll;
-        overflow-x: visible;
-    }
-</style>
+        .listHeading {
+            font-size: 24px;
+            box-shadow: 0px 0.25rem 0.75rem rgba(0, 0, 0, 0.05);
+            height: 50px;
+            background-color: #ebebeb;
+            flex-direction: row;
+            display: flex;
+        }
+
+        .centered-text {
+            transform: translateY(15%);
+        }
+
+        .center-aligned-text {
+            text-align: center;
+        }
+
+        .listContent {
+            flex-direction: column;
+            background-color: #dedede;
+        }
+
+        .list {
+            width: 400px;
+            height: 94%;
+            overflow-y: scroll;
+            overflow-x: visible;
+        }
+    </style>
+</head>
 
 <partial name="_NavbarPartial" />
 
@@ -27,59 +52,54 @@
                 <a class="nav-link text-dark font-weight-bolder" asp-area="" asp-controller="Home" asp-action="Index">CURRENT LOCATION</a>
             </div>
             <div class="navbar-nav flex-grow-1 flex-sm-row-reverse">
-                <a class="nav-link text-dark font-weight-bolder" asp-area="" asp-controller="Home" asp-action="Index">LOCATIONS LIST</a>
+                <button class="nav-link text-dark font-weight-bolder btn btn-light" onclick="list_click">LOCATIONS LIST</button>
             </div>
         </div>
     </nav>
     <div style="display: flex; flex-direction: row; height:87%;">
         <div class="map" id="map" style="width:100%;"></div>
-        <div class="phoneList">
-            <ul>
-                <li>oiosaiodfio</li>
-                <li>osidfojjjsjf</li>
-                <li>oiosaiodfio</li>
-                <li>osidfojjjsjf</li>
-                <li>oiosaiodfio</li>
-                <li>osidfojjjsjf</li>
-                <li>oiosaiodfio</li>
-                <li>osidfojjjsjf</li>
-                <li>oiosaiodfio</li>
-                <li>osidfojjjsjf</li>
-                <li>oiosaiodfio</li>
-                <li>osidfojjjsjf</li>
-                <li>oiosaiodfio</li>
-                <li>osidfojjjsjf</li>
-                <li>oiosaiodfio</li>
-                <li>osidfojjjsjf</li>
-                <li>oiosaiodfio</li>
-                <li>osidfojjjsjf</li>
-                <li>oiosaiodfio</li>
-                <li>osidfojjjsjf</li>
-                <li>oiosaiodfio</li>
-                <li>osidfojjjsjf</li>
-                <li>oiosaiodfio</li>
-                <li>osidfojjjsjf</li>
-                <li>oiosaiodfio</li>
-                <li>osidfojjjsjf</li>
-                <li>oiosaiodfio</li>
-                <li>osidfojjjsjf</li>
-                <li>oiosaiodfio</li>
-                <li>osidfojjjsjf</li>
-                <li>oiosaiodfio</li>
-                <li>osidfojjjsjf</li>
-                <li>oiosaiodfio</li>
-                <li>osidfojjjsjf</li>
-                <li>oiosaiodfio</li>
-                <li>osidfojjjsjf</li>
-                <li>oiosaiodfio</li>
-                <li>osidfojjjsjf</li>
-                <li>oiosaiodfio</li>
-                <li>osidfojjjsjf</li>
-            </ul>
+        <div class="listContent" id="phonesList">
+            <div class="listHeading">
+                <p class="centered-text center-aligned-text" style="margin-left: 10px;">Phones List</p>
+                <a class="btn btn-light" style="margin-left: 210px;"><img src="~/add.png" /></a>
+            </div>
+            <div class="list">
+                <ul style="list-style-type:none; padding-left: 0;">
+                    <li style="flex-direction:row; display: flex;">
+                        <a class="btn btn-light" style="flex-direction:row; display: flex; padding-left: 0; width: 400px;">
+                            <img src="~/phone.png" />
+                            <div style="flex-direction:column;">
+                                <p class="centered-text">
+                                    <b>Phone Name</b><br />
+                                    Phone Code
+                                </p>
+                            </div>
+                            <p id="online" style="transform: translateY(37%); margin-left: 30px;">▲ONLINE</p>
+                        </a>
+                        <a class="btn btn-light" style="margin-left: 0px; margin-top: 0px; padding-bottom: 0;"><img src="~/edit.png" style="transform: translateY(120%);" /></a>
+                    </li>
+                </ul>
+            </div>
         </div>
-        
+        <div class="listContent" id="locsList">
+            <div class="listHeading">
+                <p class="centered-text center-aligned-text" style="margin-left: 10px;">Locations List</p>
+            </div>
+            <div class="list">
+                <ul style="list-style-type:none; padding-left: 0;">
+                    <li style="flex-direction:row; display: flex;">
+                        <a class="btn btn-light" style="flex-direction:row; display: flex; padding-left: 0; width: 400px;">
+                            <img src="~/loc_icon_gray.png" style="margin-left: 10px;" />
+                            <p style="margin-top: 3px; margin-left: 170px; text-align: right; position: absolute;">Time taken</p>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
     </div>
 
 </div>
 <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDE_BVIxNCy8kZ1S2sEk3bRgpMTuu3c1Nc&v=3.exp&sensor=false"></script>
 <script type="text/javascript" src="~/js/maps.js"></script>
+<script type="text/javascript" src="~/js/track-lists.js"></script>
