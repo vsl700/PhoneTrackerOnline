@@ -49,10 +49,11 @@
     <nav class="nav navbar navbar-expand-sm">
         <div class="container">
             <div class="navbar-nav flex-grow-1">
-                <a class="nav-link text-dark font-weight-bolder" asp-area="" asp-controller="Home" asp-action="Index">CURRENT LOCATION</a>
+                <button id="currentLocBtn" class="nav-link text-dark font-weight-bolder btn btn-light">CURRENT LOCATION</button>
             </div>
             <div class="navbar-nav flex-grow-1 flex-sm-row-reverse">
-                <button class="nav-link text-dark font-weight-bolder btn btn-light" onclick="list_click">LOCATIONS LIST</button>
+                <button id="locsListBtn" class="nav-link text-dark font-weight-bolder btn btn-light">SHOW LOCATIONS LIST</button>
+                <button id="phonesListBtn" class="nav-link text-dark font-weight-bolder btn btn-light">SHOW PHONES LIST</button>
             </div>
         </div>
     </nav>
