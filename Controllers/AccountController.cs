@@ -73,7 +73,7 @@ namespace PhoneTracker.Controllers
                 var result = await _signInManager.PasswordSignInAsync(model.Username, model.Password, model.RememberMe, false);
                 if (result.Succeeded)
                 {
-                    return RedirectToAction("Index", "Appointment");
+                    return RedirectToAction("Index", "Track");
                 }
                 ModelState.AddModelError("", "Invalid login attempt!");
             }

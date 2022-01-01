@@ -1,6 +1,7 @@
-﻿@{ 
+﻿@{
     Layout = null;
 }
+@model PhoneTrackerOnline.Models.User;
 
 <head>
     <title>Track with Phone Tracker-Online</title>
@@ -62,23 +63,26 @@
         <div class="listContent" id="phonesList">
             <div class="listHeading">
                 <p class="centered-text center-aligned-text" style="margin-left: 10px;">Phones List</p>
-                <a class="btn btn-light" style="margin-left: 210px;"><img src="~/add.png" /></a>
+                <a class="btn btn-light" id="addBtn" style="margin-left: 210px;"><img src="~/add.png" /></a>
             </div>
             <div class="list">
                 <ul style="list-style-type:none; padding-left: 0;">
-                    <li style="flex-direction:row; display: flex;">
-                        <a class="btn btn-light" style="flex-direction:row; display: flex; padding-left: 0; width: 400px;">
-                            <img src="~/phone.png" />
-                            <div style="flex-direction:column;">
-                                <p class="centered-text">
-                                    <b>Phone Name</b><br />
-                                    Phone Code
-                                </p>
-                            </div>
-                            <p id="online" style="transform: translateY(37%); margin-left: 30px;">▲ONLINE</p>
-                        </a>
-                        <a class="btn btn-light" style="margin-left: 0px; margin-top: 0px; padding-bottom: 0;"><img src="~/edit.png" style="transform: translateY(120%);" /></a>
-                    </li>
+                    @foreach (var targetPhone in Model.TrackedPhones)
+                    {
+                        <li style="flex-direction:row; display: flex;">
+                            <a class="btn btn-light" style="flex-direction:row; display: flex; padding-left: 0; width: 400px;">
+                                <img src="~/phone.png" />
+                                <div style="flex-direction:column;">
+                                    <p class="centered-text">
+                                        <b>@targetPhone.Name</b><br />
+                                        @targetPhone.Code
+                                    </p>
+                                </div>
+                                <p id="online" style="transform: translateY(37%); margin-left: 30px;">▲ONLINE</p>
+                            </a>
+                            <a class="btn btn-light" style="margin-left: 0px; margin-top: 0px; padding-bottom: 0;"><img src="~/edit.png" style="transform: translateY(120%);" /></a>
+                        </li>
+                    }
                 </ul>
             </div>
         </div>
@@ -97,7 +101,7 @@
                 </ul>
             </div>
         </div>
-
+        <div class="listContent" id="popup"><partial name="_AddEditTargetPhone" /></div>
     </div>
 
 </div>
