@@ -25,6 +25,9 @@ namespace PhoneTrackerOnline.Models
 
         public virtual ICollection<Location> LocationsList { get; set; }
 
+        public double CurrentLat { get; set; }
+        public double CurrentLong { get; set; }
+
 
         public TargetPhone()
         {
