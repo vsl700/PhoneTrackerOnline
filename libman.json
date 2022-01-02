@@ -5,6 +5,16 @@
     {
       "library": "select2@4.0.13",
       "destination": "wwwroot/lib/select2/"
+    },
+    {
+      "provider": "filesystem",
+      "library": "wwwroot//SignalR/",
+      "destination": "wwwroot/SignalR/"
+    },
+    {
+      "provider": "unpkg",
+      "library": "@microsoft/signalr@6.0.1",
+      "destination": "wwwroot/microsoft/signalr/"
     }
   ]
 }
