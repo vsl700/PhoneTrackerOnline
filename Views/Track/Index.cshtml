@@ -41,7 +41,9 @@
     </style>
 </head>
 
-<partial name="_NavbarPartial" />
+<header>
+    <partial name="_NavbarPartial" />
+</header>
 
 <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
 <link rel="stylesheet" href="~/css/site.css" />
@@ -112,13 +114,10 @@
 <script type="text/javascript" src="~/js/maps.js"></script>
 <script type="text/javascript" src="~/js/track-lists.js"></script>
 <script type="text/javascript" src="~/SignalR/Scripts/jquery-1.6.4.js"></script>
-@*<script>
-    var userId = @Model.Username;
-</script>*@
 <script>
     function ready() {
     }
-    //random number between 1 and 100 for demo
+    
     var userId = "/NotificationUserHub?userId=" + @Model.ID;
     document.addEventListener("DOMContentLoaded", ready);
 </script>

@@ -47,8 +47,6 @@ namespace PhoneTrackerOnline.Controllers
         [HttpPost]
         public async void Post(int targetCode, [FromBody] IEnumerable<double> value)
         {
-            //await _notificationHubContext.Clients.All.SendAsync("sendToUser", value.First(), value.Last());
-
             var connections = _userConnectionManager.GetUserConnections("/NotificationUserHub?userId=" + _db.TargetPhones.Where(phone => phone.Code == targetCode).First().UserID);
             if (connections != null && connections.Count > 0)
             {

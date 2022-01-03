@@ -61,7 +61,6 @@ namespace PhoneTracker
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
 
-                endpoints.MapHub<NotificationHub>("/NotificationHub");
                 endpoints.MapHub<NotificationUserHub>("/NotificationUserHub");
             });
         }
