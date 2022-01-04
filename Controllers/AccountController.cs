@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using PhoneTrackerOnline.Models;
 using System.Threading.Tasks;
+using System.Linq;
 
 namespace PhoneTracker.Controllers
 {
@@ -33,6 +34,12 @@ namespace PhoneTracker.Controllers
         {
             if (ModelState.IsValid)
             {
+                if(_db.CallerUsers.Where(user => user.Username == model.Username).Count() > 0)
+                {
+                    ModelState.AddModelError("", "Such username already exists!");
+                    return View(model);
+                }
+
                 var user = new ApplicationUser
                 {
                     UserName = model.Username,

@@ -41,10 +41,14 @@
     </style>
 </head>
 
-<partial name="_NavbarPartial" />
+<header>
+    <partial name="_NavbarPartial" />
+</header>
 
 <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
 <link rel="stylesheet" href="~/css/site.css" />
+
+<input type="hidden" id="signalRConnectionId" />
 
 <div>
     <nav class="nav navbar navbar-expand-sm">
@@ -67,6 +71,7 @@
             </div>
             <div class="list">
                 <ul style="list-style-type:none; padding-left: 0;">
+                    @if(Model.TrackedPhones != null)
                     @foreach (var targetPhone in Model.TrackedPhones)
                     {
                         <li style="flex-direction:row; display: flex;">
@@ -108,3 +113,13 @@
 <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDE_BVIxNCy8kZ1S2sEk3bRgpMTuu3c1Nc&v=3.exp&sensor=false"></script>
 <script type="text/javascript" src="~/js/maps.js"></script>
 <script type="text/javascript" src="~/js/track-lists.js"></script>
+<script type="text/javascript" src="~/SignalR/Scripts/jquery-1.6.4.js"></script>
+<script>
+    function ready() {
+    }
+    
+    var userId = "/NotificationUserHub?userId=" + @Model.ID;
+    document.addEventListener("DOMContentLoaded", ready);
+</script>
+<script type="text/javascript" src="~/microsoft/signalr/dist/browser/signalr.js"></script>
+<script type="text/javascript" src="~/js/notification.js"></script>

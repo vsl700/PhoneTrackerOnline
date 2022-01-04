@@ -2,16 +2,13 @@ using PhoneTracker.Models;
 using PhoneTracker.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using PhoneTrackerOnline.Hubs;
+using PhoneTrackerOnline.Interface;
 
 namespace PhoneTracker
 {
@@ -31,6 +28,9 @@ namespace PhoneTracker
             services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
             services.AddIdentity<ApplicationUser, IdentityRole>().AddEntityFrameworkStores<ApplicationDbContext>();
             services.AddTransient<IAppointmentService, AppointmentService>();
+            services.AddSignalR();
+
+            services.AddSingleton<IUserConnectionManager, UserConnectionManager>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -60,6 +60,8 @@ namespace PhoneTracker
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
+
+                endpoints.MapHub<NotificationUserHub>("/NotificationUserHub");
             });
         }
     }

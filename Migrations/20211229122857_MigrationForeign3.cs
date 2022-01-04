@@ -50,8 +50,8 @@ namespace PhoneTracker.Migrations
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Code = table.Column<int>(type: "int", nullable: false),
                     IsAlreadyTaken = table.Column<bool>(type: "bit", nullable: false),
-                    ContactID = table.Column<int>(type: "int", nullable: false),
-                    UserID = table.Column<int>(type: "int", nullable: true)
+                    ContactID = table.Column<int>(type: "int", nullable: true),
+                    UserID = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
