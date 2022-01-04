@@ -1,14 +1,26 @@
 ﻿
-    <div id="popupbox">
-        <br />
-        <div class="popupttl bluetxt"><b>Add/Edit Target Phone</b></div>
-        <hr />
-        <br />
-        <br />
-        <div class="popupdesc">
-            <div class="form-group">
-                <label for="Name">Title</label>
-                <input type="text" maxlength="100" class="form-control" id="title" />
+<div class="modal fade" role="dialog" id="popupbox">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content" style="padding: 30px; padding-top: 5px;">
+            <br />
+            <div class="popupttl bluetxt"><b>Add/Edit Target Phone</b></div>
+            <hr />
+            <br />
+            <br />
+            <div class="popupdesc">
+                <div class="form-group">
+                    <label for="Name">Title</label>
+                    <input type="text" maxlength="100" class="form-control" id="title" />
+                </div>
+                <div class="form-group">
+                    <label for="Contact">Corresponding Contact (for sending SMS if needed)</label>
+                    <select id="contact" asp-items="ViewBag.Contacts" class="form-control"></select>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary">Save changes</button>
             </div>
         </div>
     </div>
+</div>

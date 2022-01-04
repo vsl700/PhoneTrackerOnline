@@ -67,7 +67,7 @@
         <div class="listContent" id="phonesList">
             <div class="listHeading">
                 <p class="centered-text center-aligned-text" style="margin-left: 10px;">Phones List</p>
-                <a class="btn btn-light" id="addBtn" style="margin-left: 210px;"><img src="~/add.png" /></a>
+                <button type="button" class="btn btn-light" id="addBtn" style="margin-left: 210px;" data-toggle="modal" data-target="#popupbox"><img src="~/add.png" /></button>
             </div>
             <div class="list">
                 <ul style="list-style-type:none; padding-left: 0;">
@@ -110,6 +110,9 @@
     </div>
 
 </div>
+
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
 <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDE_BVIxNCy8kZ1S2sEk3bRgpMTuu3c1Nc&v=3.exp&sensor=false"></script>
 <script type="text/javascript" src="~/js/maps.js"></script>
 <script type="text/javascript" src="~/js/track-lists.js"></script>

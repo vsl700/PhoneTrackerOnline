@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
 using PhoneTracker.Models;
+using PhoneTracker.Utility;
 using PhoneTrackerOnline.Hubs;
 using PhoneTrackerOnline.Interface;
 using PhoneTrackerOnline.Models;
@@ -26,6 +27,8 @@ namespace PhoneTrackerOnline.Controllers
 
             var query = _db.CallerUsers.AsQueryable();
             User user = query.Where(user => user.Username == User.Identity.Name).First();
+
+            ViewBag.Contacts = Helper.GetContacts(user);
 
             return View(user);
         }

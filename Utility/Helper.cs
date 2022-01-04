@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc.Rendering;
+using PhoneTrackerOnline.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -35,6 +36,11 @@ namespace PhoneTracker.Utility
             }
 
             return duration;
+        }
+
+        public static ICollection<Contact> GetContacts(User user)
+        {
+            return user.ContactsList;
         }
     }
 }
