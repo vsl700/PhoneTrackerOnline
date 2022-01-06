@@ -1,6 +1,4 @@
-﻿"use strict";
-
-var connection = new signalR.HubConnectionBuilder().withUrl("/NotificationUserHub?userId=" + userId).build();     
+﻿var connection = new signalR.HubConnectionBuilder().withUrl("/NotificationUserHub?userId=" + userId).build();
 connection.on("sendToUser", (articleHeading, articleContent) => {
     var heading = document.createElement("h3");
     heading.textContent = articleHeading;
@@ -8,7 +6,8 @@ connection.on("sendToUser", (articleHeading, articleContent) => {
     p.innerText = articleContent;
     var div = document.createElement("div");
     div.appendChild(heading);
-    div.appendChild(p); document.getElementById("locsList").appendChild(div);
+    div.appendChild(p);
+    document.getElementById("locsList").appendChild(div);
 });
 
 connection.start().catch(function (err) {

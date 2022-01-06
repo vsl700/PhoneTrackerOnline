@@ -45,16 +45,23 @@ namespace PhoneTrackerOnline.Controllers
 
         // POST api/target
         [HttpPost]
-        public async void Post(int targetCode, [FromBody] IEnumerable<double> value)
+        public async Task<int> Post(int targetCode, [FromBody] IEnumerable<double> value)
         {
-            var connections = _userConnectionManager.GetUserConnections("/NotificationUserHub?userId=" + _db.TargetPhones.Where(phone => phone.Code == targetCode).First().UserID);
+            var userID = _db.TargetPhones.Where(phone => phone.Code == targetCode).First().UserID;
+            var userName = _db.CallerUsers.Find(userID).Username;
+
+            var connections = _userConnectionManager.GetUserConnections(userName);
             if (connections != null && connections.Count > 0)
             {
                 foreach (var connectionId in connections)
                 {
                     await _notificationUserHubContext.Clients.Client(connectionId).SendAsync("sendToUser", value.First(), value.Last());
                 }
+
+                return connections.Count;
             }
+
+            return 0;
         }
 
         // PUT api/target/5
