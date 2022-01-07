@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using PhoneTracker.Models;
+using PhoneTrackerOnline.Interface;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -14,10 +15,12 @@ namespace PhoneTrackerOnline.Controllers
     public class CallerAPIController : ControllerBase
     {
         private readonly SignInManager<ApplicationUser> _signInManager;
+        private readonly IUserConnectionManager _userConnectionManager;
 
-        public CallerAPIController(SignInManager<ApplicationUser> signInManager)
+        public CallerAPIController(SignInManager<ApplicationUser> signInManager, IUserConnectionManager userConnectionManager)
         {
             _signInManager = signInManager;
+            _userConnectionManager = userConnectionManager;
         }
 
         // GET: api/caller
@@ -44,6 +47,19 @@ namespace PhoneTrackerOnline.Controllers
 
             var result = await _signInManager.PasswordSignInAsync(user.First(), user.Last(), false, false);
             return result.Succeeded;
+        }
+
+        // POST api/caller/listen
+        [HttpPost("listen")]
+        public bool SignConnectionId(string connectionId)
+        {
+            if (User != null && User.Identity.IsAuthenticated)
+            {
+                _userConnectionManager.KeepUserConnection(User.Identity.Name, connectionId);
+                return true;
+            }
+
+            return false;
         }
 
         // PUT api/caller/5

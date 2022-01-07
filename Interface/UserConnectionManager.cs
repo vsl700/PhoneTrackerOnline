@@ -7,7 +7,7 @@ namespace PhoneTrackerOnline.Interface
 {
     public class UserConnectionManager : IUserConnectionManager
     {
-        private static Dictionary<string, List<string>> userConnectionMap = new Dictionary<string, List<string>>();
+        public static Dictionary<string, List<string>> userConnectionMap = new Dictionary<string, List<string>>();
         private static string userConnectionMapLocker = string.Empty;
 
         public void KeepUserConnection(string userId, string connectionId)
