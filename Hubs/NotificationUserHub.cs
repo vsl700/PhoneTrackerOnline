@@ -18,9 +18,7 @@ namespace PhoneTrackerOnline.Hubs
 
         public override Task OnConnectedAsync()
         {
-            var httpContext = this.Context.GetHttpContext();
-            var userId = httpContext.Request.Query["userId"];
-            _userConnectionManager.KeepUserConnection(userId, Context.ConnectionId);
+            GetConnectionId();
 
             return base.OnConnectedAsync();
         }

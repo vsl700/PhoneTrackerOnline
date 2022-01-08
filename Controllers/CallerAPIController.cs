@@ -49,19 +49,6 @@ namespace PhoneTrackerOnline.Controllers
             return result.Succeeded;
         }
 
-        // POST api/caller/listen
-        [HttpPost("listen")]
-        public bool SignConnectionId(string connectionId)
-        {
-            if (User != null && User.Identity.IsAuthenticated)
-            {
-                _userConnectionManager.KeepUserConnection(User.Identity.Name, connectionId);
-                return true;
-            }
-
-            return false;
-        }
-
         // PUT api/caller/5
         [HttpPut("{id}")]
         public void Put(int id, [FromBody] string value)
