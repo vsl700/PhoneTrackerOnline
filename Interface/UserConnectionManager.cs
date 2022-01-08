@@ -18,7 +18,9 @@ namespace PhoneTrackerOnline.Interface
                 {
                     userConnectionMap[userId] = new List<string>();
                 }
-                userConnectionMap[userId].Add(connectionId);
+
+                if(!userConnectionMap[userId].Contains(connectionId))
+                    userConnectionMap[userId].Add(connectionId);
             }
         }
         public void RemoveUserConnection(string connectionId)
@@ -44,6 +46,9 @@ namespace PhoneTrackerOnline.Interface
             var conn = new List<string>();
             lock (userConnectionMapLocker)
             {
+                if (!userConnectionMap.ContainsKey(userId))
+                    return null;
+
                 conn = userConnectionMap[userId];
             }
             return conn;
