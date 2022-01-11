@@ -74,18 +74,18 @@
                     @if(Model.TrackedPhones != null)
                     @foreach (var targetPhone in Model.TrackedPhones)
                     {
-                        <li style="flex-direction:row; display: flex;">
-                            <a class="btn btn-light" style="flex-direction:row; display: flex; padding-left: 0; width: 400px;">
-                                <img src="~/phone.png" />
+                        <li style="flex-direction:row; display: flex; padding-bottom: 3px;">
+                            <a class="btn btn-light phone-select" id="@targetPhone.ID" style="flex-direction:row; display: flex; padding-left: 0; width: 400px;">
+                                <img src="~/phone.png" alt="phoneIcon" />
                                 <div style="flex-direction:column;">
-                                    <p class="centered-text">
+                                    <p class="centered-text" style="text-align: left;">
                                         <b>@targetPhone.Name</b><br />
                                         @targetPhone.Code
                                     </p>
                                 </div>
                                 <p id="online" style="transform: translateY(37%); margin-left: 30px;">▲ONLINE</p>
                             </a>
-                            <a class="btn btn-light" style="margin-left: 0px; margin-top: 0px; padding-bottom: 0;"><img src="~/edit.png" style="transform: translateY(120%);" /></a>
+                            <a class="btn btn-light phone-edit" id="@targetPhone.ID" style="margin-left: 0px; margin-top: 0px; padding-bottom: 0;"><img src="~/edit.png" style="transform: translateY(120%);" /></a>
                         </li>
                     }
                 </ul>
@@ -106,7 +106,7 @@
                 </ul>
             </div>
         </div>
-        <div class="listContent" id="popup"><partial name="_AddEditTargetPhone" /></div>
+        <partial name="_AddEditTargetPhone" />
     </div>
 
 </div>
