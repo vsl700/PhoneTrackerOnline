@@ -7,11 +7,11 @@ using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PhoneTracker.Models;
 
-namespace PhoneTracker.Migrations
+namespace PhoneTrackerOnline.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20220102143212_Migr6")]
-    partial class Migr6
+    [Migration("20220111140443_Migr")]
+    partial class Migr
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -238,14 +238,14 @@ namespace PhoneTracker.Migrations
                     b.Property<bool>("Taken")
                         .HasColumnType("bit");
 
-                    b.Property<int?>("UserID")
+                    b.Property<int>("UserID")
                         .HasColumnType("int");
 
                     b.HasKey("ID");
 
                     b.HasIndex("UserID");
 
-                    b.ToTable("Contact");
+                    b.ToTable("Contacts");
                 });
 
             modelBuilder.Entity("PhoneTrackerOnline.Models.Location", b =>
@@ -305,8 +305,6 @@ namespace PhoneTracker.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("ID");
-
-                    b.HasIndex("ContactID");
 
                     b.HasIndex("UserID");
 
@@ -384,7 +382,9 @@ namespace PhoneTracker.Migrations
                 {
                     b.HasOne("PhoneTrackerOnline.Models.User", null)
                         .WithMany("ContactsList")
-                        .HasForeignKey("UserID");
+                        .HasForeignKey("UserID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("PhoneTrackerOnline.Models.Location", b =>
@@ -396,19 +396,11 @@ namespace PhoneTracker.Migrations
 
             modelBuilder.Entity("PhoneTrackerOnline.Models.TargetPhone", b =>
                 {
-                    b.HasOne("PhoneTrackerOnline.Models.Contact", "Contact")
-                        .WithMany()
-                        .HasForeignKey("ContactID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("PhoneTrackerOnline.Models.User", null)
                         .WithMany("TrackedPhones")
                         .HasForeignKey("UserID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("Contact");
                 });
 
             modelBuilder.Entity("PhoneTrackerOnline.Models.TargetPhone", b =>

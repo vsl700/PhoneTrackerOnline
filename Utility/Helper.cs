@@ -38,9 +38,15 @@ namespace PhoneTracker.Utility
             return duration;
         }
 
-        public static ICollection<Contact> GetContacts(User user)
+        public static ICollection<SelectListItem> ConvertContacts(List<Contact> contacts)
         {
-            return user.ContactsList;
+            List<SelectListItem> items = new List<SelectListItem>();
+            foreach(Contact contact in contacts)
+            {
+                items.Add(new SelectListItem { Value=contact.ID + "", Text=contact.Name + ": " + contact.PhoneNumber });
+            }
+
+            return items;
         }
     }
 }

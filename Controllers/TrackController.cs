@@ -39,6 +39,16 @@ namespace PhoneTrackerOnline.Controllers
             }
             user.TrackedPhones = tempPhones;
 
+            List<Contact> tempUserContacts = new List<Contact>();
+            foreach(Contact contact in _db.Contacts)
+            {
+                if(contact.UserID == user.ID && !contact.Taken)
+                {
+                    tempUserContacts.Add(contact);
+                }
+            }
+            ViewBag.Contacts = Helper.ConvertContacts(tempUserContacts);
+
             return View(user);
         }
     }

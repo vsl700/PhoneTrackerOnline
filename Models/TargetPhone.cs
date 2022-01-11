@@ -21,9 +21,7 @@ namespace PhoneTrackerOnline.Models
         [Required]
         public bool IsAlreadyTaken { get; set; }
 
-        /*[ForeignKey("Contact")]
-        public int ContactID { get; set; }*/
-        public virtual Contact Contact { get; set; }
+        public int ContactID { get; set; }
 
         public virtual ICollection<Location> LocationsList { get; set; }
 

@@ -17,6 +17,8 @@ namespace PhoneTrackerOnline.Models
         [Required]
         public bool Taken { get; set; }
 
+        public int UserID { get; set; }
+
 
         public Contact()
         {

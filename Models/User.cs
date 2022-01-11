@@ -12,7 +12,5 @@ namespace PhoneTrackerOnline.Models
         public string Username { get; set; }
 
         public virtual ICollection<TargetPhone> TrackedPhones { get; set; }
-
-        public virtual ICollection<Contact> ContactsList { get; set; }
     }
 }
