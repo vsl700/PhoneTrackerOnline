@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using PhoneTracker.Models;
 using PhoneTrackerOnline.Interface;
+using PhoneTrackerOnline.Models;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -14,32 +15,106 @@ namespace PhoneTrackerOnline.Controllers
     [ApiController]
     public class CallerAPIController : ControllerBase
     {
+        private readonly ApplicationDbContext _db;
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly IUserConnectionManager _userConnectionManager;
 
-        public CallerAPIController(SignInManager<ApplicationUser> signInManager, IUserConnectionManager userConnectionManager)
+        public CallerAPIController(ApplicationDbContext db, SignInManager<ApplicationUser> signInManager, IUserConnectionManager userConnectionManager)
         {
+            _db = db;
             _signInManager = signInManager;
             _userConnectionManager = userConnectionManager;
         }
 
-        // GET: api/caller
-        [HttpGet]
-        public IEnumerable<string> Get()
+        // GET: api/caller/codes
+        [HttpGet("codes")]
+        public IEnumerable<int> GetTargetCodes()
         {
-            return new string[] { "value1", "value2" };
+            if (!User.Identity.IsAuthenticated)
+                return new int[] { -1 };
+
+            User user = null;
+            foreach(User tempUser in _db.CallerUsers)
+            {
+                if(tempUser.Username == User.Identity.Name)
+                {
+                    user = tempUser;
+                    break;
+                }
+            }
+
+            LinkedList<int> codes = new LinkedList<int>();
+            foreach(var phone in _db.TargetPhones)
+            {
+                if (phone.UserID == user.ID)
+                    codes.AddLast(phone.OldCode);
+            }
+
+            return codes;
         }
 
-        // GET api/caller/5
-        [HttpGet("{id}")]
-        public string Get(int id)
+        // POST: api/caller/contacts
+        [HttpPost("contacts")]
+        public bool SendContactsList([FromBody] IDictionary<string, string> contacts)
         {
-            return "value";
+            if (!User.Identity.IsAuthenticated)
+                return false;
+
+            User user = null;
+            foreach (User tempUser in _db.CallerUsers)
+            {
+                if (tempUser.Username == User.Identity.Name)
+                {
+                    user = tempUser;
+                    break;
+                }
+            }
+
+            foreach(var contact in _db.Contacts)
+            {
+                _db.Contacts.Remove(contact);
+            }
+
+            foreach(var kvPair in contacts)
+            {
+                Contact tempContact = FindContact(user, kvPair.Key);
+                if(tempContact != null)
+                {
+                    if (tempContact.Name == kvPair.Key && tempContact.PhoneNumber == kvPair.Value)
+                        continue;
+
+                    tempContact.Name = kvPair.Key;
+                    tempContact.PhoneNumber = kvPair.Value;
+                    _db.Update(tempContact);
+                }
+                else
+                {
+                    tempContact = new Contact { Name=kvPair.Key, PhoneNumber=kvPair.Value, UserID=user.ID };
+                    _db.Contacts.Add(tempContact);
+                }
+            }
+
+            _db.SaveChangesAsync();
+
+            return true;
         }
 
-        // POST api/caller
-        [HttpPost]
-        public async Task<bool> Post([FromBody] IEnumerable<string> user)
+        private Contact FindContact(User user, string name)
+        {
+            foreach(var contact in _db.Contacts)
+            {
+                if(contact.UserID == user.ID && contact.Name == name)
+                {
+                    return contact;
+                }
+            }
+
+            return null;
+        }
+
+        // POST api/caller/login
+        [HttpPost("login")]
+        public async Task<bool> Login([FromBody] IEnumerable<string> user)
         {
             /*bool loggedIn = (User != null) && User.Identity.IsAuthenticated;
             if (loggedIn)
@@ -47,18 +122,6 @@ namespace PhoneTrackerOnline.Controllers
 
             var result = await _signInManager.PasswordSignInAsync(user.First(), user.Last(), false, false);
             return result.Succeeded;
-        }
-
-        // PUT api/caller/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
-        {
-        }
-
-        // DELETE api/caller/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
         }
     }
 }
