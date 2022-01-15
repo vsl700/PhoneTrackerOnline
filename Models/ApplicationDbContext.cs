@@ -14,6 +14,7 @@ namespace PhoneTracker.Models
         public DbSet<User> CallerUsers { get; set; }
         public DbSet<TargetPhone> TargetPhones { get; set; }
         public DbSet<Contact> Contacts { get; set; }
+        public DbSet<Location> Locations { get; set; }
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
         {

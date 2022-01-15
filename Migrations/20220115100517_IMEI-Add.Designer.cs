@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PhoneTracker.Models;
 
 namespace PhoneTrackerOnline.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220115100517_IMEI-Add")]
+    partial class IMEIAdd
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -260,7 +262,7 @@ namespace PhoneTrackerOnline.Migrations
                     b.Property<int>("MarkerColor")
                         .HasColumnType("int");
 
-                    b.Property<int>("TargetPhoneID")
+                    b.Property<int?>("TargetPhoneID")
                         .HasColumnType("int");
 
                     b.Property<string>("TimeTaken")
@@ -271,7 +273,7 @@ namespace PhoneTrackerOnline.Migrations
 
                     b.HasIndex("TargetPhoneID");
 
-                    b.ToTable("Locations");
+                    b.ToTable("Location");
                 });
 
             modelBuilder.Entity("PhoneTrackerOnline.Models.TargetPhone", b =>
@@ -378,9 +380,7 @@ namespace PhoneTrackerOnline.Migrations
                 {
                     b.HasOne("PhoneTrackerOnline.Models.TargetPhone", null)
                         .WithMany("LocationsList")
-                        .HasForeignKey("TargetPhoneID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("TargetPhoneID");
                 });
 
             modelBuilder.Entity("PhoneTrackerOnline.Models.TargetPhone", b =>

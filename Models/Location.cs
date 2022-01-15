@@ -18,5 +18,7 @@ namespace PhoneTrackerOnline.Models
 
         [Required]
         public string TimeTaken { get; set; }
+
+        public int TargetPhoneID { get; set; }
     }
 }

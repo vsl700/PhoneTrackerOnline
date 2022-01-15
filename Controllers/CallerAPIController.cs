@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using PhoneTracker.Models;
-using PhoneTrackerOnline.Interface;
 using PhoneTrackerOnline.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -17,13 +17,11 @@ namespace PhoneTrackerOnline.Controllers
     {
         private readonly ApplicationDbContext _db;
         private readonly SignInManager<ApplicationUser> _signInManager;
-        private readonly IUserConnectionManager _userConnectionManager;
 
-        public CallerAPIController(ApplicationDbContext db, SignInManager<ApplicationUser> signInManager, IUserConnectionManager userConnectionManager)
+        public CallerAPIController(ApplicationDbContext db, SignInManager<ApplicationUser> signInManager)
         {
             _db = db;
             _signInManager = signInManager;
-            _userConnectionManager = userConnectionManager;
         }
 
         // GET: api/caller/codes
@@ -31,7 +29,7 @@ namespace PhoneTrackerOnline.Controllers
         public IEnumerable<int> GetTargetCodes()
         {
             if (!User.Identity.IsAuthenticated)
-                return new int[] { -1 };
+                throw new Exception("Validation failed!");
 
             User user = null;
             foreach(User tempUser in _db.CallerUsers)
@@ -47,7 +45,7 @@ namespace PhoneTrackerOnline.Controllers
             foreach(var phone in _db.TargetPhones)
             {
                 if (phone.UserID == user.ID)
-                    codes.AddLast(phone.OldCode);
+                    codes.AddLast(phone.Code);
             }
 
             return codes;
@@ -55,10 +53,10 @@ namespace PhoneTrackerOnline.Controllers
 
         // POST: api/caller/contacts
         [HttpPost("contacts")]
-        public bool SendContactsList([FromBody] IDictionary<string, string> contacts)
+        public void SendContactsList([FromBody] IDictionary<string, string> contacts)
         {
             if (!User.Identity.IsAuthenticated)
-                return false;
+                throw new Exception("Validation failed!");
 
             User user = null;
             foreach (User tempUser in _db.CallerUsers)
@@ -95,8 +93,6 @@ namespace PhoneTrackerOnline.Controllers
             }
 
             _db.SaveChangesAsync();
-
-            return true;
         }
 
         private Contact FindContact(User user, string name)
@@ -116,9 +112,9 @@ namespace PhoneTrackerOnline.Controllers
         [HttpPost("login")]
         public async Task<bool> Login([FromBody] IEnumerable<string> user)
         {
-            /*bool loggedIn = (User != null) && User.Identity.IsAuthenticated;
-            if (loggedIn)
-                return false;*/
+            bool loggedIn = (User != null) && User.Identity.IsAuthenticated;
+            if (loggedIn && User.Identity.Name == user.First())
+                return true;
 
             var result = await _signInManager.PasswordSignInAsync(user.First(), user.Last(), false, false);
             return result.Succeeded;

@@ -3,9 +3,11 @@ using Microsoft.AspNetCore.SignalR;
 using PhoneTracker.Models;
 using PhoneTrackerOnline.Hubs;
 using PhoneTrackerOnline.Interface;
+using PhoneTrackerOnline.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -28,26 +30,15 @@ namespace PhoneTrackerOnline.Controllers
             _userConnectionManager = userConnectionManager;
         }
 
-
-        // GET: api/target
-        [HttpGet]
-        public IEnumerable<string> Get()
-        {
-            return new string[] { "value1", "value2" };
-        }
-
-        // GET api/target/5
-        [HttpGet("{id}")]
-        public string Get(int id)
-        {
-            return "value";
-        }
-
         // POST api/target
         [HttpPost]
-        public async Task<int> Post(int targetCode, [FromBody] IEnumerable<double> value)
+        public async Task<int> SendCurrentLocation(int targetCode, long IMEI, [FromBody] IEnumerable<double> value) // Target ONLY
         {
-            var userID = _db.TargetPhones.Where(phone => phone.Code == targetCode).First().UserID;
+            var targetPhone = GetTargetPhone(targetCode, false);
+            if(targetPhone == null || targetPhone.IMEI != IMEI)
+                throw new Exception("Validation failed!");
+
+            var userID = targetPhone.UserID;
             var userName = _db.CallerUsers.Find(userID).Username;
 
             var connections = _userConnectionManager.GetUserConnections(userName);
@@ -64,16 +55,164 @@ namespace PhoneTrackerOnline.Controllers
             return 0;
         }
 
-        // PUT api/target/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        // POST api/target/locslist
+        [HttpPost("locslist")]
+        public void SendLocationsList(int targetCode, long IMEI, [FromBody] IEnumerable<string> locations)
         {
+            var targetPhone = GetTargetPhone(targetCode, false);
+            if (targetPhone == null || !ValidateAccess(targetPhone, IMEI))
+                throw new Exception("Validation failed!");
+
+            var elementsArray = locations.Select(elem => elem.Split(';'));
+
+            for (int i = 0; i < locations.Count(); i++)
+            {
+                string capTime = elementsArray.ElementAt(i)[3];
+                bool flag = false;
+                foreach(Location location in _db.Locations)
+                {
+                    if (location.TargetPhoneID != targetPhone.ID)
+                        continue;
+
+                    if(location.TimeTaken == capTime) // We only add new locations!
+                    {
+                        flag = true;
+                        break;
+                    }
+                }
+
+                if (flag)
+                    continue;
+
+
+                Location newLoc = new Location { Latitude=double.Parse(elementsArray.ElementAt(i)[0]), Longitude=double.Parse(elementsArray.ElementAt(i)[1]), MarkerColor=int.Parse(elementsArray.ElementAt(i)[2]), TimeTaken=capTime, TargetPhoneID=targetPhone.ID };
+                _db.Locations.Add(newLoc);
+            }
+
+            _db.SaveChanges();
         }
 
-        // DELETE api/target/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
+        // GET api/target/locslist
+        [HttpGet("locslist")]
+        public IEnumerable<string> GetLocationsList(int targetCode) // Caller ONLY
         {
+            var targetPhone = GetTargetPhone(targetCode, false);
+            if (targetPhone == null || !ValidateAccess(targetPhone, -1))
+                throw new Exception("Validation failed!");
+
+            LinkedList<string> locations = new LinkedList<string>();
+            StringBuilder sb = new StringBuilder();
+            foreach(Location location in _db.Locations)
+            {
+                if (location.TargetPhoneID != targetPhone.ID)
+                    continue;
+
+                sb.Append(location.Latitude); sb.Append(';');
+                sb.Append(location.Longitude); sb.Append(';');
+                sb.Append(location.MarkerColor); sb.Append(';');
+                sb.Append(location.TimeTaken);
+
+                locations.AddLast(sb.ToString());
+
+                sb.Clear();
+            }
+
+            return locations;
+        }
+
+        // GET api/target/contact
+        [HttpGet("contact")]
+        public string GetTargetNumber(int targetCode) // Caller ONLY
+        {
+            var targetPhone = GetTargetPhone(targetCode, false);
+            if (targetPhone == null || !ValidateAccess(targetPhone, -1))
+                throw new Exception("Validation failed!");
+
+            return _db.Contacts.Find(targetPhone.ContactID).PhoneNumber;
+        }
+
+        // POST api/target/login
+        [HttpPost("login")]
+        public bool Login(int targetCode, long IMEI) // Target ONLY
+        {
+            var targetPhone = GetTargetPhone(targetCode, true);
+            if (targetPhone == null || targetPhone.IMEI != 0 && targetPhone.IMEI != IMEI)
+                return false;
+
+            if(targetPhone.IMEI == 0)
+            {
+                targetPhone.IMEI = IMEI;
+                _db.TargetPhones.Update(targetPhone);
+                _db.SaveChanges();
+            }
+
+            return true;
+        }
+
+        // GET api/target/code
+        [HttpGet("code")]
+        public int GetTargetCode(int oldCode, long IMEI) // Target ONLY
+        {
+            var targetPhone = GetTargetPhone(oldCode, true);
+            if (targetPhone == null || targetPhone.IMEI != 0 && targetPhone.IMEI != IMEI)
+                throw new Exception("Validation failed!");
+
+            targetPhone.OldCode = targetPhone.Code;
+            _db.Update(targetPhone);
+            _db.SaveChanges();
+            
+
+            return targetPhone.Code;
+        }
+
+        // GET api/target/oldcode
+        [HttpGet("oldcode")]
+        public int GetTargetOldCode(int targetCode) // Caller ONLY
+        {
+            var targetPhone = GetTargetPhone(targetCode, false);
+            if (targetPhone == null || !ValidateAccess(targetPhone, -1))
+                throw new Exception("Validation failed!");
+
+            return targetPhone.OldCode;
+        }
+
+        // GET api/target/changecodereq
+        [HttpGet("changecodereq")]
+        public int ChangeCodeRequest(int targetCode, long IMEI)
+        {
+            var targetPhone = GetTargetPhone(targetCode, true);
+            if (targetPhone == null || !ValidateAccess(targetPhone, IMEI))
+                throw new Exception("Validation failed!");
+
+            int newCode;
+            Random r = new Random();
+            do
+            {
+                newCode = r.Next(100000, 1000000);
+            } while (GetTargetPhone(newCode, false) != null || GetTargetPhone(newCode, true) != null);
+
+            targetPhone.Code = newCode;
+            if (targetPhone.IMEI == IMEI)
+                targetPhone.OldCode = newCode;
+
+            _db.Update(targetPhone);
+            _db.SaveChanges();
+
+            return newCode;
+        }
+
+        private TargetPhone GetTargetPhone(int code, bool oldCode)
+        {
+            var phonesList = _db.TargetPhones.Where(phone => oldCode && phone.OldCode == code || !oldCode && phone.Code == code);
+            if (phonesList.Count() > 0)
+                return phonesList.First();
+
+            return null;
+        }
+
+        private bool ValidateAccess(TargetPhone targetPhone, long IMEI)
+        {
+            return targetPhone.IMEI == IMEI || User.Identity.IsAuthenticated && User.Identity.Name == _db.CallerUsers.Find(targetPhone.UserID).Username;
         }
     }
 }

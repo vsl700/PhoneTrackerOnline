@@ -18,8 +18,7 @@ namespace PhoneTrackerOnline.Models
         [Required]
         public int OldCode { get; set; }
 
-        [Required]
-        public bool IsAlreadyTaken { get; set; }
+        public long IMEI { get; set; }
 
         public int ContactID { get; set; }
 
