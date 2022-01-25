@@ -58,7 +58,6 @@ namespace PhoneTrackerOnline.Controllers
 
                     _db.TargetPhones.Add(new TargetPhone { Name=trackVM.PhoneName, UserID=user.ID, Code=newCode, OldCode=newCode, ContactID=trackVM.PhoneContactID });
                     var contact = _db.Contacts.Find(trackVM.PhoneContactID);
-                    contact.Taken = true;
                     _db.Contacts.Update(contact);
                 }
                 else
@@ -99,12 +98,23 @@ namespace PhoneTrackerOnline.Controllers
             List<Contact> tempUserContacts = new List<Contact>();
             foreach (Contact contact in _db.Contacts)
             {
-                if (contact.UserID == user.ID && !contact.Taken)
+                if (contact.UserID == user.ID && !IsContactTaken(contact))
                 {
                     tempUserContacts.Add(contact);
                 }
             }
             ViewBag.Contacts = Helper.ConvertContacts(tempUserContacts);
+        }
+
+        private bool IsContactTaken(Contact contact)
+        {
+            foreach(var phone in _db.TargetPhones)
+            {
+                if (phone.ContactID == contact.ID)
+                    return true;
+            }
+
+            return false;
         }
     }
 }
