@@ -1,7 +1,7 @@
 ﻿@{
     Layout = null;
 }
-@model PhoneTrackerOnline.Models.User;
+@model PhoneTrackerOnline.Models.ViewModels.TrackVM;
 
 <head>
     <title>Track with Phone Tracker-Online</title>
@@ -71,8 +71,8 @@
             </div>
             <div class="list">
                 <ul style="list-style-type:none; padding-left: 0;">
-                    @if(Model.TrackedPhones != null)
-                    @foreach (var targetPhone in Model.TrackedPhones)
+                    @if(Model.Caller.TrackedPhones != null)
+                    @foreach (var targetPhone in Model.Caller.TrackedPhones)
                     {
                         <li style="flex-direction:row; display: flex; padding-bottom: 3px;">
                             <a class="btn btn-light phone-select" id="@targetPhone.ID" style="flex-direction:row; display: flex; padding-left: 0; width: 400px;">
@@ -80,12 +80,12 @@
                                 <div style="flex-direction:column;">
                                     <p class="centered-text" style="text-align: left;">
                                         <b>@targetPhone.Name</b><br />
-                                        @targetPhone.Code
+                                        Code: @targetPhone.Code
                                     </p>
                                 </div>
                                 <p id="online" style="transform: translateY(37%); margin-left: 30px;">▲ONLINE</p>
                             </a>
-                            <a class="btn btn-light phone-edit" id="@targetPhone.ID" style="margin-left: 0px; margin-top: 0px; padding-bottom: 0;"><img src="~/edit.png" style="transform: translateY(120%);" /></a>
+                            <button class="btn btn-light phone-edit" id="edit-@targetPhone.ID" data-toggle="modal" data-target="#popupbox" style="margin-left: 0px; margin-top: 0px; padding-bottom: 0;"><img src="~/edit.png" style="transform: translateY(-30%);" /></button>
                         </li>
                     }
                 </ul>
@@ -106,7 +106,36 @@
                 </ul>
             </div>
         </div>
-        <partial name="_AddEditTargetPhone" />
+
+        @*The PopUp window*@
+        <div class="modal fade" role="dialog" id="popupbox">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content" style="padding: 30px; padding-top: 5px;">
+                    <form id="phone" method="post" asp-controller="Track" asp-action="Index">
+                        <br />
+                        <div class="popupttl bluetxt"><b>Add/Edit Target Phone</b></div>
+                        <hr />
+                        <br />
+                        <br />
+                        <div class="popupdesc">
+                            <div class="form-group">
+                                <label asp-for="PhoneName">Title</label>
+                                <input asp-for="PhoneName" type="text" maxlength="100" class="form-control" id="title" />
+                                <span asp-validation-for="PhoneName" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <label for="Contact">Corresponding Contact (for sending SMS if needed)</label>
+                                <select id="contact" asp-for="PhoneContactID" asp-items="@ViewBag.Contacts" class="form-control"></select>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <input type="submit" class="btn btn-primary" value="Save Changes" />
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
     </div>
 
 </div>
@@ -121,7 +150,7 @@
     function ready() {
     }
 
-    var userId = "@Model.Username";
+    var userId = "@Model.Caller.Username";
     document.addEventListener("DOMContentLoaded", ready);
 </script>
 <script type="text/javascript" src="~/microsoft/signalr/dist/browser/signalr.js"></script>

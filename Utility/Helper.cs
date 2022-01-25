@@ -41,6 +41,7 @@ namespace PhoneTracker.Utility
         public static ICollection<SelectListItem> ConvertContacts(List<Contact> contacts)
         {
             List<SelectListItem> items = new List<SelectListItem>();
+            items.Add(new SelectListItem { Value="0", Text="-- none --" });
             foreach(Contact contact in contacts)
             {
                 items.Add(new SelectListItem { Value=contact.ID + "", Text=contact.Name + ": " + contact.PhoneNumber });
