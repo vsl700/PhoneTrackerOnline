@@ -32,10 +32,10 @@ namespace PhoneTrackerOnline.Controllers
 
         // POST api/target
         [HttpPost]
-        public async Task<int> SendCurrentLocation(int targetCode, long IMEI, [FromBody] IEnumerable<double> value) // Target ONLY
+        public async Task<int> SendCurrentLocation(int targetCode, [FromBody] IEnumerable<double> value) // Target ONLY
         {
             var targetPhone = GetTargetPhone(targetCode, false);
-            if(targetPhone == null || targetPhone.IMEI != IMEI)
+            if(targetPhone == null)
                 throw new Exception("Validation failed!");
 
             var userID = targetPhone.UserID;
@@ -57,10 +57,10 @@ namespace PhoneTrackerOnline.Controllers
 
         // POST api/target/locslist
         [HttpPost("locslist")]
-        public void SendLocationsList(int targetCode, long IMEI, [FromBody] IEnumerable<string> locations)
+        public void SendLocationsList(int targetCode, [FromBody] IEnumerable<string> locations)
         {
             var targetPhone = GetTargetPhone(targetCode, false);
-            if (targetPhone == null || !ValidateAccess(targetPhone, IMEI))
+            if (targetPhone == null || !ValidateAccess(targetPhone))
                 throw new Exception("Validation failed!");
 
             var elementsArray = locations.Select(elem => elem.Split(';'));
@@ -97,7 +97,7 @@ namespace PhoneTrackerOnline.Controllers
         public IEnumerable<string> GetLocationsList(int targetCode) // Caller ONLY
         {
             var targetPhone = GetTargetPhone(targetCode, false);
-            if (targetPhone == null || !ValidateAccess(targetPhone, -1))
+            if (targetPhone == null || !ValidateAccess(targetPhone))
                 throw new Exception("Validation failed!");
 
             LinkedList<string> locations = new LinkedList<string>();
@@ -125,36 +125,33 @@ namespace PhoneTrackerOnline.Controllers
         public string GetTargetNumber(int targetCode) // Caller ONLY
         {
             var targetPhone = GetTargetPhone(targetCode, false);
-            if (targetPhone == null || !ValidateAccess(targetPhone, -1))
+            if (targetPhone == null || !ValidateAccess(targetPhone))
                 throw new Exception("Validation failed!");
 
-            return _db.Contacts.Find(targetPhone.ContactID).PhoneNumber;
+            var contact = _db.Contacts.Find(targetPhone.ContactID);
+            if(contact != null)
+                return contact.PhoneNumber;
+
+            return "-1";
         }
 
         // POST api/target/login
         [HttpPost("login")]
-        public bool Login(int targetCode, long IMEI) // Target ONLY
+        public bool Login(int targetCode) // Target ONLY
         {
             var targetPhone = GetTargetPhone(targetCode, true);
-            if (targetPhone == null || targetPhone.IMEI != 0 && targetPhone.IMEI != IMEI)
+            if (targetPhone == null)
                 return false;
-
-            if(targetPhone.IMEI == 0)
-            {
-                targetPhone.IMEI = IMEI;
-                _db.TargetPhones.Update(targetPhone);
-                _db.SaveChanges();
-            }
 
             return true;
         }
 
         // GET api/target/code
         [HttpGet("code")]
-        public int GetTargetCode(int oldCode, long IMEI) // Target ONLY
+        public int GetTargetCode(int oldCode) // Target ONLY
         {
             var targetPhone = GetTargetPhone(oldCode, true);
-            if (targetPhone == null || targetPhone.IMEI != 0 && targetPhone.IMEI != IMEI)
+            if (targetPhone == null)
                 throw new Exception("Validation failed!");
 
             targetPhone.OldCode = targetPhone.Code;
@@ -170,7 +167,7 @@ namespace PhoneTrackerOnline.Controllers
         public int GetTargetOldCode(int targetCode) // Caller ONLY
         {
             var targetPhone = GetTargetPhone(targetCode, false);
-            if (targetPhone == null || !ValidateAccess(targetPhone, -1))
+            if (targetPhone == null || !ValidateAccess(targetPhone))
                 throw new Exception("Validation failed!");
 
             return targetPhone.OldCode;
@@ -178,10 +175,10 @@ namespace PhoneTrackerOnline.Controllers
 
         // GET api/target/changecodereq
         [HttpGet("changecodereq")]
-        public int ChangeCodeRequest(int targetCode, long IMEI)
+        public int ChangeCodeRequest(int targetCode)
         {
             var targetPhone = GetTargetPhone(targetCode, true);
-            if (targetPhone == null || !ValidateAccess(targetPhone, IMEI))
+            if (targetPhone == null || !ValidateAccess(targetPhone))
                 throw new Exception("Validation failed!");
 
             int newCode;
@@ -192,7 +189,7 @@ namespace PhoneTrackerOnline.Controllers
             } while (GetTargetPhone(newCode, false) != null || GetTargetPhone(newCode, true) != null);
 
             targetPhone.Code = newCode;
-            if (targetPhone.IMEI == IMEI)
+            if (!ValidateAccess(targetPhone)) // If the target has logged in
                 targetPhone.OldCode = newCode;
 
             _db.Update(targetPhone);
@@ -210,9 +207,9 @@ namespace PhoneTrackerOnline.Controllers
             return null;
         }
 
-        private bool ValidateAccess(TargetPhone targetPhone, long IMEI)
+        private bool ValidateAccess(TargetPhone targetPhone)
         {
-            return targetPhone.IMEI == IMEI || User.Identity.IsAuthenticated && User.Identity.Name == _db.CallerUsers.Find(targetPhone.UserID).Username;
+            return User.Identity.IsAuthenticated && User.Identity.Name == _db.CallerUsers.Find(targetPhone.UserID).Username;
         }
     }
 }

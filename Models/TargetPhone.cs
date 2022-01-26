@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace PhoneTrackerOnline.Models
 {
@@ -17,8 +16,6 @@ namespace PhoneTrackerOnline.Models
 
         [Required]
         public int OldCode { get; set; }
-
-        public long IMEI { get; set; }
 
         public int ContactID { get; set; }
 
