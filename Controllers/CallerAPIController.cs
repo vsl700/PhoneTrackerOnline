@@ -51,6 +51,33 @@ namespace PhoneTrackerOnline.Controllers
             return codes;
         }
 
+        // GET api/caller/names
+        [HttpGet("names")]
+        public IEnumerable<string> GetTargetNames()
+        {
+            if (!User.Identity.IsAuthenticated)
+                throw new Exception("Validation failed!");
+
+            User user = null;
+            foreach (User tempUser in _db.CallerUsers)
+            {
+                if (tempUser.Username == User.Identity.Name)
+                {
+                    user = tempUser;
+                    break;
+                }
+            }
+
+            LinkedList<string> names = new LinkedList<string>();
+            foreach (var phone in _db.TargetPhones)
+            {
+                if (phone.UserID == user.ID)
+                    names.AddLast(phone.Name);
+            }
+
+            return names;
+        }
+
         // POST: api/caller/contacts
         [HttpPost("contacts")]
         public void SendContactsList([FromBody] IDictionary<string, string> contacts)

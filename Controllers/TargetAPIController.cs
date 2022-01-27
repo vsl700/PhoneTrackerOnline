@@ -146,6 +146,17 @@ namespace PhoneTrackerOnline.Controllers
             return true;
         }
 
+        // GET api/target/name
+        [HttpGet("name")]
+        public string GetTargetName(int targetCode) // Caller ONLY
+        {
+            var targetPhone = GetTargetPhone(targetCode, true);
+            if (targetPhone == null || !ValidateAccess(targetPhone))
+                throw new Exception("Validation failed!");
+
+            return targetPhone.Name;
+        }
+
         // GET api/target/code
         [HttpGet("code")]
         public int GetTargetCode(int oldCode) // Target ONLY
