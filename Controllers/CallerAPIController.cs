@@ -119,7 +119,7 @@ namespace PhoneTrackerOnline.Controllers
                 }
             }
 
-            _db.SaveChangesAsync();
+            _db.SaveChanges();
         }
 
         private Contact FindContact(User user, string name)
