@@ -100,7 +100,9 @@ namespace PhoneTrackerOnline.Controllers
                 _db.Contacts.Remove(contact);
             }
 
-            foreach(var kvPair in contacts)
+            _db.SaveChanges();
+
+            foreach (var kvPair in contacts)
             {
                 Contact tempContact = FindContact(user, kvPair.Key);
                 if(tempContact != null)
