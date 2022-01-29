@@ -59,8 +59,11 @@ namespace PhoneTrackerOnline.Controllers
         [HttpPost("locslist")]
         public void SendLocationsList(int targetCode, [FromBody] IEnumerable<string> locations)
         {
+            // Had to remove User validation due to the fact that the Target should be able to use this method too!
+            // Also, in order to use this method, you'll have to actually know the current Target code, which would
+            // be difficult!
             var targetPhone = GetTargetPhone(targetCode, false);
-            if (targetPhone == null || !ValidateAccess(targetPhone))
+            if (targetPhone == null)
                 throw new Exception("Validation failed!");
 
             var elementsArray = locations.Select(elem => elem.Split(';'));
@@ -188,8 +191,11 @@ namespace PhoneTrackerOnline.Controllers
         [HttpGet("changecodereq")]
         public int ChangeCodeRequest(int targetCode)
         {
+            // Had to remove User validation due to the fact that the Target should be able to use this method too!
+            // Also, in order to use this method, you'll have to actually know the current Target code, which would
+            // be difficult, as User validation WILL be needed to get the code!
             var targetPhone = GetTargetPhone(targetCode, true);
-            if (targetPhone == null || !ValidateAccess(targetPhone))
+            if (targetPhone == null)
                 throw new Exception("Validation failed!");
 
             int newCode;
