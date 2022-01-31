@@ -95,19 +95,12 @@ namespace PhoneTrackerOnline.Controllers
                 }
             }
 
-            foreach(var contact in _db.Contacts)
-            {
-                _db.Contacts.Remove(contact);
-            }
-
-            _db.SaveChanges();
-
             foreach (var kvPair in contacts)
             {
                 Contact tempContact = FindContact(user, kvPair.Key);
                 if(tempContact != null)
                 {
-                    if (tempContact.Name == kvPair.Key && tempContact.PhoneNumber == kvPair.Value)
+                    if (tempContact.PhoneNumber == kvPair.Value)
                         continue;
 
                     tempContact.Name = kvPair.Key;
@@ -118,6 +111,17 @@ namespace PhoneTrackerOnline.Controllers
                 {
                     tempContact = new Contact { Name=kvPair.Key, PhoneNumber=kvPair.Value, UserID=user.ID };
                     _db.Contacts.Add(tempContact);
+                }
+            }
+
+            foreach(var contact in _db.Contacts)
+            {
+                if(contact.UserID == user.ID)
+                {
+                    if (!contacts.ContainsKey(contact.Name))
+                    {
+                        _db.Contacts.Remove(contact);
+                    }
                 }
             }
 

@@ -144,7 +144,18 @@ namespace PhoneTrackerOnline.Controllers
         {
             var targetPhone = GetTargetPhone(targetCode, true);
             if (targetPhone == null)
-                return false;
+            {
+                targetPhone = GetTargetPhone(targetCode, false);
+                if (targetPhone == null)
+                    return false;
+
+                // If the Target tries logging in directly with the new code (rare, but real)
+                targetPhone.OldCode = targetCode;
+                _db.Update(targetPhone);
+                _db.SaveChanges();
+
+                return true;
+            }
 
             return true;
         }
