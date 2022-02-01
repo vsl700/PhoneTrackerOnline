@@ -179,9 +179,12 @@ namespace PhoneTrackerOnline.Controllers
             if (targetPhone == null)
                 throw new Exception("Validation failed!");
 
-            targetPhone.OldCode = targetPhone.Code;
-            _db.Update(targetPhone);
-            _db.SaveChanges();
+            if (targetPhone.OldCode != targetPhone.Code)
+            {
+                targetPhone.OldCode = targetPhone.Code;
+                _db.Update(targetPhone);
+                _db.SaveChanges();
+            }
             
 
             return targetPhone.Code;
