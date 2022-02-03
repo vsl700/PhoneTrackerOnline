@@ -32,11 +32,15 @@ namespace PhoneTrackerOnline.Controllers
 
         // POST api/target
         [HttpPost]
-        public async Task<int> SendCurrentLocation(int targetCode, [FromBody] IEnumerable<double> value) // Target ONLY
+        public async Task<int> SendCurrentLocation(int targetCode, [FromBody] string value) // Target ONLY
         {
             var targetPhone = GetTargetPhone(targetCode, false);
-            if(targetPhone == null)
-                throw new Exception("Validation failed!");
+            if (targetPhone == null)
+            {
+                targetPhone = GetTargetPhone(targetCode, true);
+                if(targetPhone == null)
+                    throw new Exception("Validation failed!");
+            }
 
             var userID = targetPhone.UserID;
             var userName = _db.CallerUsers.Find(userID).Username;
@@ -46,7 +50,7 @@ namespace PhoneTrackerOnline.Controllers
             {
                 foreach (var connectionId in connections)
                 {
-                    await _notificationUserHubContext.Clients.Client(connectionId).SendAsync("sendToUser", value.First(), value.Last());
+                    await _notificationUserHubContext.Clients.Client(connectionId).SendAsync("sendToUser", targetCode, value);
                 }
 
                 return connections.Count;
