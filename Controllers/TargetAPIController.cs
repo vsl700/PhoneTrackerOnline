@@ -35,12 +35,8 @@ namespace PhoneTrackerOnline.Controllers
         public async Task<int> SendCurrentLocation(int targetCode, [FromBody] string value) // Target ONLY
         {
             var targetPhone = GetTargetPhone(targetCode, false);
-            if (targetPhone == null)
-            {
-                targetPhone = GetTargetPhone(targetCode, true);
-                if(targetPhone == null)
-                    throw new Exception("Validation failed!");
-            }
+            if(targetPhone == null)
+                throw new Exception("Validation failed!");
 
             var userID = targetPhone.UserID;
             var userName = _db.CallerUsers.Find(userID).Username;
