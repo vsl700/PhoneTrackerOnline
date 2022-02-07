@@ -9,20 +9,6 @@ namespace PhoneTracker.Utility
 {
     public static class Helper
     {
-        public static string Admin = "Admin";
-        public static string Patient = "Patient";
-        public static string PhoneTracker = "PhoneTracker";
-
-        public static List<SelectListItem> GetRolesForDropDown()
-        {
-            return new List<SelectListItem>
-            {
-                new SelectListItem{ Value=Helper.Admin, Text=Helper.Admin },
-                new SelectListItem{ Value=Helper.Patient, Text=Helper.Patient },
-                new SelectListItem{ Value=Helper.PhoneTracker, Text=Helper.PhoneTracker }
-            };
-        }
-
         public static List<SelectListItem> GetTimeDropDown()
         {
             int minute = 60;
@@ -44,10 +30,15 @@ namespace PhoneTracker.Utility
             items.Add(new SelectListItem { Value="0", Text="-- none --" });
             foreach(Contact contact in contacts)
             {
-                items.Add(new SelectListItem { Value=contact.ID + "", Text=contact.Name + ": " + contact.PhoneNumber });
+                items.Add(new SelectListItem { Value=contact.ID + "", Text=GenerateContactListTag(contact) });
             }
 
             return items;
+        }
+
+        public static string GenerateContactListTag(Contact contact)
+        {
+            return contact.Name + ": " + contact.PhoneNumber;
         }
     }
 }

@@ -29,6 +29,3 @@ locsListBtn.addEventListener("click", () => { locsList_click(); })
 phonesListBtn.addEventListener("click", () => { phonesList_click(); })
 
 phonesList_click();
-
-//var addBtn = document.getElementById("addBtn");
-//addBtn.addEventListener("click", () => { phonesList_add(); });

@@ -1,5 +1,4 @@
 using PhoneTracker.Models;
-using PhoneTracker.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
@@ -27,7 +26,6 @@ namespace PhoneTracker
             services.AddControllersWithViews();
             services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
             services.AddIdentity<ApplicationUser, IdentityRole>().AddEntityFrameworkStores<ApplicationDbContext>();
-            services.AddTransient<IAppointmentService, AppointmentService>();
             services.AddSignalR();
 
             services.AddSingleton<IUserConnectionManager, UserConnectionManager>();

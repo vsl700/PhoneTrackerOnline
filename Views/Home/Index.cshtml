@@ -4,15 +4,6 @@
 
 <div class="text-center">
     <h1 class="display-4">Welcome</h1>
-    @if (User.IsInRole(PhoneTracker.Utility.Helper.Admin))
-    {
-        <h5>Here's the link to the <a asp-controller="Appointment" asp-action="Index">PhoneTracker/Patient calendar</a></h5>
-    }
-    else if (User.IsInRole(PhoneTracker.Utility.Helper.PhoneTracker) || User.IsInRole(PhoneTracker.Utility.Helper.Patient))
-    {
-        <p>In the <a asp-controller="Appointment" asp-action="Index">PhoneTracker/Patient calendar</a> you can set your appointments.</p>
-    }
-
     <br />
     <p>PhoneTrackers' shift:</p>
     <p>Mon/Wen/Fri: 7:30-18:00</p>

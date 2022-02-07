@@ -67,11 +67,10 @@
         <div class="listContent" id="phonesList">
             <div class="listHeading">
                 <p class="centered-text center-aligned-text" style="margin-left: 10px;">Phones List</p>
-                <button type="button" class="btn btn-light" id="addBtn" style="margin-left: 210px;" data-toggle="modal" data-target="#popupbox"><img src="~/add.png" /></button>
+                <button type="button" class="btn btn-light" style="margin-left: 210px;" data-toggle="modal" data-target="#popupbox-add"><img src="~/add.png" /></button>
             </div>
             <div class="list">
                 <ul style="list-style-type:none; padding-left: 0;">
-                    @if(Model.Caller.TrackedPhones != null)
                     @foreach (var targetPhone in Model.Caller.TrackedPhones)
                     {
                         <li style="flex-direction:row; display: flex; padding-bottom: 3px;">
@@ -85,7 +84,7 @@
                                 </div>
                                 <p id="online" style="transform: translateY(37%); margin-left: 30px;">▲ONLINE</p>
                             </a>
-                            <button class="btn btn-light phone-edit" id="edit-@targetPhone.ID" data-toggle="modal" data-target="#popupbox" style="margin-left: 0px; margin-top: 0px; padding-bottom: 0;"><img src="~/edit.png" style="transform: translateY(-30%);" /></button>
+                            <button class="btn btn-light" data-toggle="modal" data-target="#popupbox-edit-@targetPhone.ID" style="margin-left: 0px; margin-top: 0px; padding-bottom: 0;"><img src="~/edit.png" style="transform: translateY(-30%);" /></button>
                         </li>
                     }
                 </ul>
@@ -108,12 +107,12 @@
         </div>
 
         @*The PopUp window*@
-        <div class="modal fade" role="dialog" id="popupbox">
+        <div class="modal fade" role="dialog" id="popupbox-add">
             <div class="modal-dialog" role="document">
                 <div class="modal-content" style="padding: 30px; padding-top: 5px;">
                     <form id="phone" method="post" asp-controller="Track" asp-action="Index">
                         <br />
-                        <div class="popupttl bluetxt"><b>Add/Edit Target Phone</b></div>
+                        <div class="popupttl bluetxt"><b>Add New Target Phone</b></div>
                         <hr />
                         <br />
                         <br />
@@ -136,22 +135,73 @@
                 </div>
             </div>
         </div>
+
+        @foreach (var targetPhone in Model.Caller.TrackedPhones)
+        {
+            <div class="modal fade" role="dialog" id="popupbox-edit-@targetPhone.ID">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content" style="padding: 30px; padding-top: 5px;">
+                        <form id="phone" method="post" asp-controller="Track" asp-action="Index">
+                            <br />
+                            <div class="popupttl bluetxt"><b>Edit a Target Phone</b></div>
+                            <hr />
+                            <br />
+                            <br />
+                            <div class="popupdesc">
+                                <input asp-for="PhoneID" value="@targetPhone.ID" style="display: none" />
+                                <div class="form-group">
+                                    <label asp-for="PhoneName">Title</label>
+                                    <input asp-for="PhoneName" type="text" maxlength="100" class="form-control" id="title" value="@targetPhone.Name" />
+                                    <span asp-validation-for="PhoneName" class="text-danger"></span>
+                                </div>
+                                <div class="form-group">
+                                    <label for="Contact">Corresponding Contact (for sending SMS if needed)</label>
+                                    <select id="contact" asp-for="PhoneContactID" asp-items="@ViewBag.Contacts" class="form-control" >
+                                        @if (ViewBag.ContactStrings.ContainsKey(targetPhone.ID))
+                                        {
+                                            <option class="default-selected" value="-1">@ViewBag.ContactStrings[targetPhone.ID]</option>
+                                        }
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                <input type="submit" class="btn btn-primary" value="Save Changes" />
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        }
     </div>
 
 </div>
 
 <script src="~/lib/jquery/dist/jquery.min.js"></script>
-<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+<script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>
 <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDE_BVIxNCy8kZ1S2sEk3bRgpMTuu3c1Nc&v=3.exp&sensor=false"></script>
 <script type="text/javascript" src="~/js/maps.js"></script>
 <script type="text/javascript" src="~/js/track-lists.js"></script>
-<script type="text/javascript" src="~/SignalR/Scripts/jquery-1.6.4.js"></script>
+
 <script>
     function ready() {
     }
 
     var userId = "@Model.Caller.Username";
     document.addEventListener("DOMContentLoaded", ready);
+
+    var defaultItems = document.getElementsByClassName("default-selected");
+    for (i = 0; i < defaultItems.length; i++) {
+        defaultItems[i].selected = true;
+    }
+
+    $(window).on('load', function () {
+        if(@ViewBag.PhoneIDError == 0)
+            $("#popupbox-add").modal("show");
+        else if (@ViewBag.PhoneIDError > 0)
+            $("#popupbox-edit-@ViewBag.PhoneIDError").modal("show");
+    });
 </script>
+
 <script type="text/javascript" src="~/microsoft/signalr/dist/browser/signalr.js"></script>
 <script type="text/javascript" src="~/js/notification.js"></script>

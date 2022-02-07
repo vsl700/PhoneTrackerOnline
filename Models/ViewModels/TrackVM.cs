@@ -10,13 +10,13 @@ namespace PhoneTrackerOnline.Models.ViewModels
     {
         public User Caller { get; set; }
 
-        public int PhoneID { get; set; } // id == 0 means new, id > 0 means edit an existing one
+        public Dictionary<TargetPhone, string> ContactStrings { get; set; }
 
-        [Required]
+        public int PhoneID { get; set; }
+
+        [Required(ErrorMessage = "This field is required!")]
         public string PhoneName { get; set; }
 
         public int PhoneContactID { get; set; }
-
-        public bool Delete { get; set; }
     }
 }

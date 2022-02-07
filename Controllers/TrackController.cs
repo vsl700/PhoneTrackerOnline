@@ -34,6 +34,8 @@ namespace PhoneTrackerOnline.Controllers
 
             TrackVM trackVM = new TrackVM { Caller=user };
 
+            ViewBag.PhoneIDError = -1;
+
             return View(trackVM);
         }
 
@@ -46,7 +48,7 @@ namespace PhoneTrackerOnline.Controllers
 
             if (ModelState.IsValid)
             {
-                if (trackVM.PhoneID == 0)
+                if (trackVM.PhoneID == 0) // Add
                 {
                     int newCode;
                     Random r = new Random();
@@ -56,18 +58,26 @@ namespace PhoneTrackerOnline.Controllers
                     } while (GetTargetPhone(newCode, false) != null || GetTargetPhone(newCode, true) != null);
 
 
-                    _db.TargetPhones.Add(new TargetPhone { Name=trackVM.PhoneName, UserID=user.ID, Code=newCode, OldCode=newCode, ContactID=trackVM.PhoneContactID });
-                    var contact = _db.Contacts.Find(trackVM.PhoneContactID);
-                    _db.Contacts.Update(contact);
-                }
-                else
-                {
-                    _db.TargetPhones.Update(new TargetPhone { ID=trackVM.PhoneID, Name = trackVM.PhoneName, ContactID=trackVM.PhoneContactID });
-                }
-                _db.SaveChanges();
+                    _db.TargetPhones.Add(new TargetPhone { Name = trackVM.PhoneName, UserID = user.ID, Code = newCode, OldCode = newCode, ContactID = trackVM.PhoneContactID });
+                    _db.SaveChanges();
 
-                return RedirectToAction("Index");
+                    return RedirectToAction("Index");
+                }
+                else // Edit
+                {
+                    var phone = _db.TargetPhones.Find(trackVM.PhoneID);
+                    phone.Name = trackVM.PhoneName;
+                    if(trackVM.PhoneContactID != -1) // -1 means no change in the Phone's Contact; 0 means no contact; any positive number means a ContactID
+                        phone.ContactID = trackVM.PhoneContactID;
+
+                    _db.TargetPhones.Update(phone);
+                    _db.SaveChanges();
+
+                    return RedirectToAction("Index");
+                }
             }
+
+            ViewBag.PhoneIDError = trackVM.PhoneID;
 
             ConfigureUser(user);
             trackVM.Caller = user;
@@ -96,6 +106,7 @@ namespace PhoneTrackerOnline.Controllers
             user.TrackedPhones = tempPhones;
 
             List<Contact> tempUserContacts = new List<Contact>();
+            ViewBag.ContactStrings = new Dictionary<int, string>();
             foreach (Contact contact in _db.Contacts)
             {
                 if (contact.UserID == user.ID && !IsContactTaken(contact))
@@ -111,7 +122,10 @@ namespace PhoneTrackerOnline.Controllers
             foreach(var phone in _db.TargetPhones)
             {
                 if (phone.ContactID == contact.ID)
+                {
+                    ViewBag.ContactStrings[phone.ID] = Helper.GenerateContactListTag(contact);
                     return true;
+                }
             }
 
             return false;
