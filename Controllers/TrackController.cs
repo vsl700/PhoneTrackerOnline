@@ -84,6 +84,16 @@ namespace PhoneTrackerOnline.Controllers
             return View(trackVM);
         }
 
+        [HttpPost]
+        public IActionResult Delete(TrackVM trackVM)
+        {
+            var phone = _db.TargetPhones.Find(trackVM.PhoneID);
+            _db.TargetPhones.Remove(phone);
+            _db.SaveChanges();
+
+            return RedirectToAction("Index");
+        }
+
         private TargetPhone GetTargetPhone(int code, bool oldCode)
         {
             var phonesList = _db.TargetPhones.Where(phone => oldCode && phone.OldCode == code || !oldCode && phone.Code == code);

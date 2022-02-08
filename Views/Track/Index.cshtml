@@ -84,7 +84,8 @@
                                 </div>
                                 <p id="online" style="transform: translateY(37%); margin-left: 30px;">▲ONLINE</p>
                             </a>
-                            <button class="btn btn-light" data-toggle="modal" data-target="#popupbox-edit-@targetPhone.ID" style="margin-left: 0px; margin-top: 0px; padding-bottom: 0;"><img src="~/edit.png" style="transform: translateY(-30%);" /></button>
+                            <button class="btn btn-light" data-toggle="modal" data-target="#popupbox-edit-@targetPhone.ID" style="margin-left: 0px; margin-top: 0px; padding-bottom: 0; background-color: burlywood"><img src="~/edit.png" style="transform: translateY(-30%);" /></button>
+                            <button class="btn btn-light" data-toggle="modal" data-target="#popupbox-delete-@targetPhone.ID" style="margin-left: 0px; margin-top: 0px; padding-bottom: 0; background-color: firebrick"><img src="~/delete.png" style="transform: translateY(-30%);" /></button>
                         </li>
                     }
                 </ul>
@@ -106,7 +107,7 @@
             </div>
         </div>
 
-        @*The PopUp window*@
+        @*"Add" popup*@
         <div class="modal fade" role="dialog" id="popupbox-add">
             <div class="modal-dialog" role="document">
                 <div class="modal-content" style="padding: 30px; padding-top: 5px;">
@@ -128,7 +129,7 @@
                             </div>
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
                             <input type="submit" class="btn btn-primary" value="Save Changes" />
                         </div>
                     </form>
@@ -136,6 +137,7 @@
             </div>
         </div>
 
+        @*"Edit" popups for each phone*@
         @foreach (var targetPhone in Model.Caller.TrackedPhones)
         {
             <div class="modal fade" role="dialog" id="popupbox-edit-@targetPhone.ID">
@@ -156,7 +158,7 @@
                                 </div>
                                 <div class="form-group">
                                     <label for="Contact">Corresponding Contact (for sending SMS if needed)</label>
-                                    <select id="contact" asp-for="PhoneContactID" asp-items="@ViewBag.Contacts" class="form-control" >
+                                    <select id="contact" asp-for="PhoneContactID" asp-items="@ViewBag.Contacts" class="form-control">
                                         @if (ViewBag.ContactStrings.ContainsKey(targetPhone.ID))
                                         {
                                             <option class="default-selected" value="-1">@ViewBag.ContactStrings[targetPhone.ID]</option>
@@ -165,8 +167,34 @@
                                 </div>
                             </div>
                             <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
                                 <input type="submit" class="btn btn-primary" value="Save Changes" />
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        }
+
+        @*"Delete" popups for each phone*@
+        @foreach (var targetPhone in Model.Caller.TrackedPhones)
+        {
+            <div class="modal fade" role="dialog" id="popupbox-delete-@targetPhone.ID">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content" style="padding: 30px; padding-top: 5px;">
+                        <form id="phone" method="post" asp-controller="Track" asp-action="Delete">
+                            <br />
+                            <div class="popupttl bluetxt"><b>Remove a Phone</b></div>
+                            <hr />
+                            <br />
+                            <br />
+                            <div class="popupdesc">
+                                <input asp-for="PhoneID" value="@targetPhone.ID" style="display: none" />
+                                <p>Are you sure you want to remove "@targetPhone.Name"?</p>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+                                <input type="submit" class="btn btn-danger" value="Yes" />
                             </div>
                         </form>
                     </div>

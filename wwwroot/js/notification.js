@@ -1,6 +1,5 @@
 ﻿var connection = new signalR.HubConnectionBuilder().withUrl("/NotificationUserHub?userId=" + userId).build();
 connection.on("sendToUser", (targetCode, value) => {
-    alert("Received!");
     var heading = document.createElement("h3");
     heading.textContent = targetCode;
     var p = document.createElement("p");
