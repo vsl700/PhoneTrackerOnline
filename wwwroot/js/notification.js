@@ -1,19 +1,19 @@
-﻿var connection = new signalR.HubConnectionBuilder().withUrl("/NotificationUserHub?userId=" + userId).build();
+﻿// Set up the state notificators
+var onlineDescs = document.getElementsByClassName("online-desc");
+
+var connection = new signalR.HubConnectionBuilder().withUrl("/NotificationUserHub?userId=" + userId).build();
 connection.on("sendToUser", (targetCode, value) => {
-    var heading = document.createElement("h3");
-    heading.textContent = targetCode;
-    var p = document.createElement("p");
-    p.innerText = value;
-    var div = document.createElement("div");
-    div.appendChild(heading);
-    div.appendChild(p);
-    document.getElementById("locsList").appendChild(div);
+    for (i = 0; i < onlineDescs.length; i++) {
+        if (onlineDescs[i].id == targetCode) {
+            onlineDescs[i].style = null; // null because otherwise it sets the display to block, which separates the text from the name, while that way it resets the style as if it has never been set, which is the working way in the case
+            break;
+        }
+    }
 });
 
 connection.start().catch(function (err) {
     return console.error(err.toString());
 }).then(function () {
-    //document.getElementById("user").innerHTML = "UserId: " + userId;
     connection.invoke('GetConnectionId').then(function (connectionId) {
         document.getElementById('signalRConnectionId').innerHTML = connectionId;
     })

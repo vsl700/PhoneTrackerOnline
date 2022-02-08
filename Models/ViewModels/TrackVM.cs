@@ -15,7 +15,7 @@ namespace PhoneTrackerOnline.Models.ViewModels
         public int PhoneID { get; set; }
 
         [Required(ErrorMessage = "This field is required!")]
-        [StringLength(20, ErrorMessage = "The maximum length of a phone name is 20!")]
+        [StringLength(20, ErrorMessage = "The maximum length of a phone name is {1}!")]
         public string PhoneName { get; set; }
 
         public int PhoneContactID { get; set; }

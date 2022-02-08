@@ -78,7 +78,7 @@
                                 <img src="~/phone.png" alt="phoneIcon" />
                                 <div style="flex-direction:column;">
                                     <p class="centered-text" style="text-align: left; margin-bottom: 10px;">
-                                        <b>@targetPhone.Name</b><br />
+                                        <b>@targetPhone.Name</b><i id="@targetPhone.Code" class="online-desc" style="display: none;"> is online</i>
                                     </p>
                                     <div class="code-visible" id="code-visible-@targetPhone.ID" style="display: none; text-align: left;">Code: @targetPhone.Code</div>
                                     <div class="code-invisible" id="code-invisible-@targetPhone.ID" style="text-align: left;" title="click on the text to see the code">Code: ****** <img src="~/invisible.png"/></div>
