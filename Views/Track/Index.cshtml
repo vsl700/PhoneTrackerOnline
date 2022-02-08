@@ -33,7 +33,7 @@
         }
 
         .list {
-            width: 400px;
+            width: 470px;
             height: 94%;
             overflow-y: scroll;
             overflow-x: visible;
@@ -67,23 +67,23 @@
         <div class="listContent" id="phonesList">
             <div class="listHeading">
                 <p class="centered-text center-aligned-text" style="margin-left: 10px;">Phones List</p>
-                <button type="button" class="btn btn-light" style="margin-left: 210px;" data-toggle="modal" data-target="#popupbox-add"><img src="~/add.png" /></button>
+                <button type="button" class="btn btn-light" style="margin-left: 283px;" data-toggle="modal" data-target="#popupbox-add"><img src="~/add.png" /></button>
             </div>
             <div class="list">
                 <ul style="list-style-type:none; padding-left: 0;">
                     @foreach (var targetPhone in Model.Caller.TrackedPhones)
                     {
-                        <li style="flex-direction:row; display: flex; padding-bottom: 3px;">
+                        <li style="flex-direction:row; display: flex; padding-bottom: 3px; height: 81px;">
                             <a class="btn btn-light phone-select" id="@targetPhone.ID" style="flex-direction:row; display: flex; padding-left: 0; width: 400px;">
                                 <img src="~/phone.png" alt="phoneIcon" />
                                 <div style="flex-direction:column;">
                                     <p class="centered-text" style="text-align: left; margin-bottom: 10px;">
                                         <b>@targetPhone.Name</b><br />
                                     </p>
-                                    <div class="code-visible" id="code-visible-@targetPhone.ID" style="display: none;">Code: @targetPhone.Code</div>
-                                    <div class="code-invisible" id="code-invisible-@targetPhone.ID">Code: ******</div>
+                                    <div class="code-visible" id="code-visible-@targetPhone.ID" style="display: none; text-align: left;">Code: @targetPhone.Code</div>
+                                    <div class="code-invisible" id="code-invisible-@targetPhone.ID" style="text-align: left;" title="click on the text to see the code">Code: ****** <img src="~/invisible.png"/></div>
                                 </div>
-                                <p id="online" style="transform: translateY(37%); margin-left: 30px;">▲ONLINE</p>
+                                @*<p id="online" style="transform: translateY(37%); margin-left: 30px;">▲ONLINE</p>*@
                             </a>
                             <button class="btn btn-light" data-toggle="modal" data-target="#popupbox-edit-@targetPhone.ID" style="margin-left: 0px; margin-top: 0px; padding-bottom: 0; background-color: burlywood"><img src="~/edit.png" style="transform: translateY(-30%);" /></button>
                             <button class="btn btn-light" data-toggle="modal" data-target="#popupbox-delete-@targetPhone.ID" style="margin-left: 0px; margin-top: 0px; padding-bottom: 0; background-color: firebrick"><img src="~/delete.png" style="transform: translateY(-30%);" /></button>
