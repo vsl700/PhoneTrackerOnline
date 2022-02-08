@@ -77,10 +77,11 @@
                             <a class="btn btn-light phone-select" id="@targetPhone.ID" style="flex-direction:row; display: flex; padding-left: 0; width: 400px;">
                                 <img src="~/phone.png" alt="phoneIcon" />
                                 <div style="flex-direction:column;">
-                                    <p class="centered-text" style="text-align: left;">
+                                    <p class="centered-text" style="text-align: left; margin-bottom: 10px;">
                                         <b>@targetPhone.Name</b><br />
-                                        Code: @targetPhone.Code
                                     </p>
+                                    <div class="code-visible" id="code-visible-@targetPhone.ID" style="display: none;">Code: @targetPhone.Code</div>
+                                    <div class="code-invisible" id="code-invisible-@targetPhone.ID">Code: ******</div>
                                 </div>
                                 <p id="online" style="transform: translateY(37%); margin-left: 30px;">▲ONLINE</p>
                             </a>
@@ -221,6 +222,14 @@
     var defaultItems = document.getElementsByClassName("default-selected");
     for (i = 0; i < defaultItems.length; i++) {
         defaultItems[i].selected = true;
+    }
+
+    var invisibleCodes = document.getElementsByClassName("code-invisible");
+    var visibleCodes = document.getElementsByClassName("code-visible");
+    for (i = 0; i < invisibleCodes.length; i++) {
+        let index = parseInt(i);
+        invisibleCodes[i].onclick = function () { document.getElementById(invisibleCodes[index].id).style.display = "none"; document.getElementById(visibleCodes[index].id).style.display = "block"; }
+        visibleCodes[i].onclick = function () { document.getElementById(visibleCodes[index].id).style.display = "none"; document.getElementById(invisibleCodes[index].id).style.display = "block"; }
     }
 
     $(window).on('load', function () {
