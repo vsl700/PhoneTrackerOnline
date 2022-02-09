@@ -38,6 +38,14 @@
             overflow-y: scroll;
             overflow-x: visible;
         }
+
+        ul {
+            margin-bottom: 0px !important;
+        }
+
+        .loc-icon {
+            margin-left: 20px;
+        }
     </style>
 </head>
 
@@ -62,7 +70,7 @@
             </div>
         </div>
     </nav>
-    <div style="display: flex; flex-direction: row; height:87%;">
+    <div style="display: flex; flex-direction: row; height:85%;">
         <div class="map" id="map" style="width:100%;"></div>
         <div class="listContent" id="phonesList">
             <div class="listHeading">
@@ -74,16 +82,15 @@
                     @foreach (var targetPhone in Model.Caller.TrackedPhones)
                     {
                         <li style="flex-direction:row; display: flex; padding-bottom: 3px; height: 81px;">
-                            <a class="btn btn-light phone-select" id="@targetPhone.ID" style="flex-direction:row; display: flex; padding-left: 0; width: 400px;">
+                            <a class="btn btn-light phone-select" id="phone-select-@targetPhone.ID" style="flex-direction:row; display: flex; padding-left: 0; width: 400px;">
                                 <img src="~/phone.png" alt="phoneIcon" />
                                 <div style="flex-direction:column;">
                                     <p class="centered-text" style="text-align: left; margin-bottom: 10px;">
                                         <b>@targetPhone.Name</b><i id="@targetPhone.Code" class="online-desc" style="display: none;"> is online</i>
                                     </p>
                                     <div class="code-visible" id="code-visible-@targetPhone.ID" style="display: none; text-align: left;">Code: @targetPhone.Code</div>
-                                    <div class="code-invisible" id="code-invisible-@targetPhone.ID" style="text-align: left;" title="click on the text to see the code">Code: ****** <img src="~/invisible.png"/></div>
+                                    <div class="code-invisible" id="code-invisible-@targetPhone.ID" style="text-align: left;" title="click on the text to see the code">Code: ****** <img src="~/invisible.png" /></div>
                                 </div>
-                                @*<p id="online" style="transform: translateY(37%); margin-left: 30px;">▲ONLINE</p>*@
                             </a>
                             <button class="btn btn-light" data-toggle="modal" data-target="#popupbox-edit-@targetPhone.ID" style="margin-left: 0px; margin-top: 0px; padding-bottom: 0; background-color: burlywood"><img src="~/edit.png" style="transform: translateY(-30%);" /></button>
                             <button class="btn btn-light" data-toggle="modal" data-target="#popupbox-delete-@targetPhone.ID" style="margin-left: 0px; margin-top: 0px; padding-bottom: 0; background-color: firebrick"><img src="~/delete.png" style="transform: translateY(-30%);" /></button>
@@ -92,21 +99,47 @@
                 </ul>
             </div>
         </div>
-        <div class="listContent" id="locsList">
+
+        <div class="listContent locsList-null" id="locsList-0">
             <div class="listHeading">
                 <p class="centered-text center-aligned-text" style="margin-left: 10px;">Locations List</p>
             </div>
             <div class="list">
-                <ul style="list-style-type:none; padding-left: 0;">
-                    <li style="flex-direction:row; display: flex;">
-                        <a class="btn btn-light" style="flex-direction:row; display: flex; padding-left: 0; width: 400px;">
-                            <img src="~/loc_icon_gray.png" style="margin-left: 10px;" />
-                            <p style="margin-top: 3px; margin-left: 170px; text-align: right; position: absolute;">Time taken</p>
-                        </a>
-                    </li>
-                </ul>
+                <p style="text-align: center; margin-top: 10px;">Please choose a phone from the phones list</p>
             </div>
         </div>
+
+        @foreach (var targetPhone in Model.Caller.TrackedPhones)
+        {
+            <div class="listContent locsList" id="locsList-@targetPhone.ID" style="display: none;">
+                <div class="listHeading">
+                    <p class="centered-text center-aligned-text" style="margin-left: 10px;">Locations List (@targetPhone.Name)</p>
+                </div>
+                <div class="list">
+                    <ul style="list-style-type:none; padding-left: 0;">
+                        @foreach (var location in targetPhone.LocationsList)
+                        {
+                            <li>
+                                <a class="btn btn-light loc-select" style="display: flex; flex-direction:row; padding-left: 0; height: 50px;">
+                                    @switch (location.MarkerColor)
+                                    {
+                                        case 0:<img src="~/loc_icon_blue.png" class="loc-icon" /> break;
+                                        case 1: <img src="~/loc_icon_green.png" class="loc-icon" />break;
+                                        case 2: <img src="~/loc_icon_magenta.png" class="loc-icon" /> break;
+                                        case 3: <img src="~/loc_icon_orange.png" class="loc-icon" />break;
+                                        case 4: <img src="~/loc_icon_red.png" class="loc-icon" />break;
+                                        default: <img src="~/loc_icon_gray.png" class="loc-icon" />break;
+                                    }
+                                    <p style="margin-top: 5px; margin-left: 200px;">@location.TimeTaken</p>
+                                    <p class="lat" style="display: none;">@location.Latitude</p>
+                                    <p class="lng" style="display: none;">@location.Longitude</p>
+                                </a>
+                            </li>
+                        }
+                    </ul>
+                </div>
+            </div>
+        }
 
         @*"Add" popup*@
         <div class="modal fade" role="dialog" id="popupbox-add">
@@ -227,7 +260,7 @@
     var invisibleCodes = document.getElementsByClassName("code-invisible");
     var visibleCodes = document.getElementsByClassName("code-visible");
     for (i = 0; i < invisibleCodes.length; i++) {
-        let index = parseInt(i);
+        let index = i;
         invisibleCodes[i].onclick = function () { document.getElementById(invisibleCodes[index].id).style.display = "none"; document.getElementById(visibleCodes[index].id).style.display = "block"; }
         visibleCodes[i].onclick = function () { document.getElementById(visibleCodes[index].id).style.display = "none"; document.getElementById(invisibleCodes[index].id).style.display = "block"; }
     }

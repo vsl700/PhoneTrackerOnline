@@ -111,6 +111,16 @@ namespace PhoneTrackerOnline.Controllers
                 if (targetPhone.UserID == user.ID)
                 {
                     tempPhones.Add(targetPhone);
+
+                    List<Location> locations = new List<Location>();
+                    foreach(Location location in _db.Locations)
+                    {
+                        if(location.TargetPhoneID == targetPhone.ID)
+                        {
+                            locations.Add(location);
+                        }
+                    }
+                    targetPhone.LocationsList = locations;
                 }
             }
             user.TrackedPhones = tempPhones;
