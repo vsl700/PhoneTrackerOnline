@@ -3,8 +3,8 @@
 {
     <form method="post" id="logoutForm" asp-action="Logoff" asp-controller="Account">
         <ul class="nav navbar-nav">
-            <li class="text-white nav-link">Hello, @User.Identity.Name</li>
-            <li><a class="text-white nav-link" href="javascript:document.getElementById('logoutForm').submit()">Log off</a></li>
+            <li class="text-white nav-link font-weight-bolder">Hello, @User.Identity.Name</li>
+            <li><a class="text-white nav-link font-weight-bolder" href="javascript:document.getElementById('logoutForm').submit()">Log off</a></li>
         </ul>
     </form>
 }

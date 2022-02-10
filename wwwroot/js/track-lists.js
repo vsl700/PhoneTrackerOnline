@@ -4,9 +4,29 @@ let selectedLocElement = null;
 
 var phonesList = document.getElementById("phonesList");
 var locsList = document.getElementById("locsList-0");
+var locationMarkers;
+var currentLocationMarkers;
 
 function locsList_click() {
-    document.getElementById("locsList-" + currentId).style.display = "block";
+    let currentLocsList = document.getElementById("locsList-" + currentId);
+    let buttons = currentLocsList.getElementsByClassName("loc-select");
+    locationMarkers = [];
+    for (i = 0; i < buttons.length; i++) {
+        let index = i;
+
+        // Placing markers...
+        let tempLat = buttons[index].getElementsByClassName("lat")[0].textContent.replace(",", ".");
+        tempLat = parseFloat(tempLat);
+        let tempLng = buttons[index].getElementsByClassName("lng")[0].textContent.replace(",", ".");
+        tempLng = parseFloat(tempLng);
+
+        let tempImageSrc = buttons[index].getElementsByClassName("loc-icon")[0].src;
+        
+        CreateMarker(tempLat, tempLng, tempImageSrc);
+        locationMarkers[index] = marker;
+    }
+
+    currentLocsList.style.display = "block";
     phonesList.style.display = "none";
     locsListBtn.style.display = "none";
     phonesListBtn.style.display = "block";
@@ -18,7 +38,15 @@ function phonesList_click() {
         selectedLocElement = null;
     }
 
-    document.getElementById("locsList-" + currentId).style.display = "none";
+    let currentLocsList = document.getElementById("locsList-" + currentId);
+    if (locationMarkers != null) {
+        let buttons = currentLocsList.getElementsByClassName("loc-select");
+        for (i = 0; i < buttons.length; i++) {
+            locationMarkers[i].setMap(null);
+        }
+    }
+
+    currentLocsList.style.display = "none";
     phonesList.style.display = "block";
     locsListBtn.style.display = "block";
     phonesListBtn.style.display = "none";
@@ -61,6 +89,13 @@ for (i = 0; i < locsLists.length; i++) {
 
             selectedLocElement = buttons[index];
             selectedLocElement.style.backgroundColor = "lightgray";
+
+            let tempLat = buttons[index].getElementsByClassName("lat")[0].textContent.replace(",", ".");
+            tempLat = parseFloat(tempLat);
+            let tempLng = buttons[index].getElementsByClassName("lng")[0].textContent.replace(",", ".");
+            tempLng = parseFloat(tempLng);
+
+            MoveCamera(tempLat, tempLng);
         }
     }
 }

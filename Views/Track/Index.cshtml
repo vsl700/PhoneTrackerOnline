@@ -43,18 +43,22 @@
             margin-bottom: 0px !important;
         }
 
-        .loc-icon {
+        .loc-icon-css {
             margin-left: 20px;
+        }
+
+        form{
+            margin-bottom: 0px;
         }
     </style>
 </head>
 
+<link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+<link rel="stylesheet" href="~/css/site.css" />
+
 <header>
     <partial name="_NavbarPartial" />
 </header>
-
-<link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-<link rel="stylesheet" href="~/css/site.css" />
 
 <input type="hidden" id="signalRConnectionId" />
 
@@ -62,7 +66,7 @@
     <nav class="nav navbar navbar-expand-sm">
         <div class="container">
             <div class="navbar-nav flex-grow-1">
-                <button id="currentLocBtn" class="nav-link text-dark font-weight-bolder btn btn-light">CURRENT LOCATION</button>
+                <button id="currentLocBtn" class="nav-link text-dark font-weight-bolder btn btn-light">MY CURRENT LOCATION</button>
             </div>
             <div class="navbar-nav flex-grow-1 flex-sm-row-reverse">
                 <button id="locsListBtn" class="nav-link text-dark font-weight-bolder btn btn-light">SHOW LOCATIONS LIST</button>
@@ -123,12 +127,12 @@
                                 <a class="btn btn-light loc-select" style="display: flex; flex-direction:row; padding-left: 0; height: 50px;">
                                     @switch (location.MarkerColor)
                                     {
-                                        case 0:<img src="~/loc_icon_blue.png" class="loc-icon" /> break;
-                                        case 1: <img src="~/loc_icon_green.png" class="loc-icon" />break;
-                                        case 2: <img src="~/loc_icon_magenta.png" class="loc-icon" /> break;
-                                        case 3: <img src="~/loc_icon_orange.png" class="loc-icon" />break;
-                                        case 4: <img src="~/loc_icon_red.png" class="loc-icon" />break;
-                                        default: <img src="~/loc_icon_gray.png" class="loc-icon" />break;
+                                        case 0:<img src="~/loc_icon_blue.png" class="loc-icon-css" /> <img src="~/phone_loc_blue.png" class="loc-icon" style="display: none;"/> break;
+                                        case 1: <img src="~/loc_icon_green.png" class="loc-icon-css" /> <img src="~/phone_loc_green.png" class="loc-icon" style="display: none;" />break;
+                                        case 2: <img src="~/loc_icon_magenta.png" class="loc-icon-css" /> <img src="~/phone_loc_magenta.png" class="loc-icon" style="display: none;" /> break;
+                                        case 3: <img src="~/loc_icon_orange.png" class="loc-icon-css" /> <img src="~/phone_loc_orange.png" class="loc-icon" style="display: none;" />break;
+                                        case 4: <img src="~/loc_icon_red.png" class="loc-icon-css" /> <img src="~/phone_loc_red.png" class="loc-icon" style="display: none;" />break;
+                                        default: <img src="~/loc_icon_gray.png" class="loc-icon-css" />break;
                                     }
                                     <p style="margin-top: 5px; margin-left: 200px;">@location.TimeTaken</p>
                                     <p class="lat" style="display: none;">@location.Latitude</p>
