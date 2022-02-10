@@ -5,7 +5,7 @@ let selectedLocElement = null;
 var phonesList = document.getElementById("phonesList");
 var locsList = document.getElementById("locsList-0");
 var locationMarkers;
-var currentLocationMarkers;
+var currentLocationMarkers = [];
 
 function locsList_click() {
     let currentLocsList = document.getElementById("locsList-" + currentId);
@@ -74,6 +74,9 @@ for (i = 0; i < phoneButtons.length; i++) {
 
         selectedPhoneElement = phoneButtons[index];
         selectedPhoneElement.style.backgroundColor = "lightgray";
+
+        if (currentLocationMarkers[index] != null)
+            MoveCamera(currentLocationMarkers[index].getPosition().lat(), currentLocationMarkers[index].getPosition().lng());
     }
 }
 
