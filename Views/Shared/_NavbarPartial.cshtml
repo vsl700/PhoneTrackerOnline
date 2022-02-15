@@ -1,10 +1,17 @@
-﻿<nav class="navbar navbar-inverse navbar-expand-sm navbar-toggleable-sm box-shadow">
+﻿<style>
+    .nav-item{
+        margin-left: 10px;
+    }
+</style>
+
+<nav class="navbar navbar-inverse navbar-expand-sm navbar-toggleable-sm box-shadow">
     <div class="container">
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
+            @*<span class="navbar-toggler-icon"></span>*@
+            <img src="~/show_more.png" />
         </button>
-        <a asp-controller="Home" asp-action="Index"><img src="~/loc_icon_cyan.png" /></a>
-        <ul class="navbar-nav flex-grow-1">
+        <a style="margin-left: 10px;" asp-controller="Home" asp-action="Index"><img src="~/loc_icon_cyan.png" /></a>
+        <ul class="navbar-nav flex-grow-1 flex-row">
             <li class="nav-item">
                 <a class="nav-link text-white font-weight-bolder" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
             </li>

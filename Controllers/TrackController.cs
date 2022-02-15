@@ -1,4 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using DeviceDetectorNET;
+using DeviceDetectorNET.Cache;
+using DeviceDetectorNET.Parser;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
 using PhoneTracker.Models;
 using PhoneTracker.Utility;
@@ -21,8 +24,32 @@ namespace PhoneTrackerOnline.Controllers
             _db = db;
         }
 
+        private bool IsMobile()
+        {
+            DeviceDetector.SetVersionTruncation(VersionTruncation.VERSION_TRUNCATION_NONE);
+
+            var dd = new DeviceDetector(Request.Headers["User-Agent"].ToString());
+            dd.SetCache(new DictionaryCache());
+            dd.DiscardBotInformation();
+            dd.SkipBotDetection();
+
+            dd.Parse();
+
+            return dd.IsMobile();
+        }
+
+        [HttpGet]
+        public IActionResult Mobile()
+        {
+            return View();
+        }
+
+        [HttpGet]
         public IActionResult Index()
         {
+            if (IsMobile())
+                return RedirectToAction("Mobile");
+
             bool loggedIn = (User != null) && User.Identity.IsAuthenticated;
             if (!loggedIn)
                 return RedirectToAction("Login", "Account");
