@@ -2,11 +2,71 @@
     ViewData["Title"] = "Home Page";
 }
 
+<style>
+    .info {
+        margin-left: 60px;
+        margin-right: 60px;
+        display: flex;
+        flex-direction: row;
+        padding-top: 20px;
+        padding-bottom: 20px;
+    }
+
+    .left-item-holder {
+        flex-direction: column;
+        width: 50%;
+        padding-right: 20px;
+        margin-right: auto;
+        position: relative;
+    }
+
+    .right-item-holder {
+        flex-direction: column;
+        max-width: 50%;
+        display: inline-flex;
+        margin-left: auto;
+        position: relative;
+    }
+
+    img {
+        max-block-size: 450px;
+    }
+</style>
+
 <div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <br />
-    <p>PhoneTrackers' shift:</p>
-    <p>Mon/Wen/Fri: 7:30-18:00</p>
-    <p>Tue/Thu: 11:00-17:00</p>
-    <p>Sat/Sun: Weekends</p>
+    <div class="alert-heading">
+        <h3>Phone Tracker-Online</h3>
+        <p>In addition to your parential control</p>
+    </div>
+</div>
+<div class="alert-secondary container-fluid" style="align-items: center;">
+    <div class="info">
+        <div class="left-item-holder">
+            <h2 style="font-weight: bolder;">Track your whole family</h2>
+            <br />
+            <p>Track your family members' locations at realtime either from a browser or from the mobile Android application. You can also check your own location for better orientation!</p>
+        </div>
+
+        <div class="right-item-holder">
+            <img src="~/desc1.png" /> 
+            @*TODO: Add an image of the mobile application*@
+        </div>
+    </div>
+</div>
+<div class="container-fluid" style="align-items: center;">
+    <div class="info">
+        <div class="left-item-holder">
+            <img src="~/desc1.png" />
+        </div>
+
+        <div class="right-item-holder">
+            <h2 style="font-weight: bolder;">Use special SMS messages to re-establish connection with Target</h2>
+            <br />
+            <p>In case the Target's phone loses connection or the "GPS Tracker" application isn't started, the <b>SMS Feature</b> really saves lifes! In other words, the <b>SMS Feature</b> 
+            allows you just by sending SMS to trigger the application's service on the Target's phone and bring it back online, or retrieve back location through SMS, usually when there's no Internet connection on Target phone.
+            And all that can be done just by sending SMS Messages between you and the Target's phone.</p>
+            <br />
+            <p><i>The whole magic happens as shown on the picture</i></p>
+        </div>
+    </div>
 </div>
