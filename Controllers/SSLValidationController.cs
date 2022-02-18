@@ -6,14 +6,14 @@ using System.Threading.Tasks;
 
 namespace PhoneTrackerOnline.Controllers
 {
-    [Route(".well-known/acme-challenge")]
+    [Route(".well-known/pki-validation")]
     [ApiController]
     public class SSLValidationController : ControllerBase
     {
-        [HttpGet("nIseS2eVZqmEmaWr7ygSkbdLpP83UZgk_WmbhLhH4MQ")]
+        [HttpGet("9FF99F4F6B14F6BDECAD20D246760F47.txt")]
         public string GetCode()
         {
-            return "nIseS2eVZqmEmaWr7ygSkbdLpP83UZgk_WmbhLhH4MQ.sVPdObX68kRGTdgM3t5nkIWyVY2N2qigZ4_AM4Zcj6w";
+            return "4B7FCDC970507306271288553E2447003887A0BB1C1A87E74BDDE8366CA66E18\ncomodoca.com\naf0245600ebc809";
         }
     }
 }
