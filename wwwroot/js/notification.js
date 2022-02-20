@@ -18,9 +18,11 @@ connection.on("sendToUser", (targetCode, value) => {
             CreateMarker(tempLat, tempLng, "phone_loc_current.png");
             currentLocationMarkers[index] = marker; 
 
-            break;
+            return;
         }
     }
+
+    window.location.href = "Track";
 });
 
 connection.start().catch(function (err) {
