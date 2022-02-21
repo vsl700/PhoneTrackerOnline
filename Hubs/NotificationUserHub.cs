@@ -70,7 +70,9 @@ namespace PhoneTrackerOnline.Hubs
             string userId = Context.GetHttpContext().Request.Query["userId"];
             if (IsACaller(userId))
             {
-                SendTrackRequest(userId, "no-trackin");
+                var connections = _userConnectionManager.GetUserConnections(userId);
+                if (connections == null || connections.Count == 0)
+                    SendTrackRequest(userId, "no-trackin");
             }
 
             var value = await Task.FromResult(0);
