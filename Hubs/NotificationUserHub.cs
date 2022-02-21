@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.SignalR;
 using PhoneTracker.Models;
 using PhoneTrackerOnline.Interface;
+using PhoneTrackerOnline.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -27,6 +28,25 @@ namespace PhoneTrackerOnline.Hubs
             if (IsACaller(userId))
             {
                 SendTrackRequest(userId, "trackin");
+            }
+            else
+            {
+                foreach(var phone in _db.TargetPhones)
+                {
+                    if(phone.Code == int.Parse(userId))
+                    {
+                        string callerUsername = _db.CallerUsers.Find(phone.UserID).Username;
+                        var callerConnections = _userConnectionManager.GetUserConnections(callerUsername);
+
+                        if (callerConnections != null && callerConnections.Count > 0) // If the Caller is tracking at the time the Target (re)connects
+                        {
+                            var connections = _userConnectionManager.GetUserConnections(userId);
+                            Clients.Client(connections[0]).SendAsync("sendToTarget", "trackin");
+                        }
+
+                        break;
+                    }
+                }
             }
             
 
@@ -70,8 +90,6 @@ namespace PhoneTrackerOnline.Hubs
                     }
                 }
             }
-
-            
         }
 
         private bool IsACaller(string userId)
