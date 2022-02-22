@@ -38,10 +38,14 @@ namespace PhoneTrackerOnline.Hubs
                         string callerUsername = _db.CallerUsers.Find(phone.UserID).Username;
                         var callerConnections = _userConnectionManager.GetUserConnections(callerUsername);
 
+                        var connections = _userConnectionManager.GetUserConnections(userId);
                         if (callerConnections != null && callerConnections.Count > 0) // If the Caller is tracking at the time the Target (re)connects
                         {
-                            var connections = _userConnectionManager.GetUserConnections(userId);
                             Clients.Client(connections[0]).SendAsync("sendToTarget", "trackin");
+                        }
+                        else
+                        {
+                            Clients.Client(connections[0]).SendAsync("sendToTarget", "no-trackin"); // That keeps the application's socket alive, otherwise it may close right after starting back
                         }
 
                         break;
